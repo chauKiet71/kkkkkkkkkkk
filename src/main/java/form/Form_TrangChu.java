@@ -12,6 +12,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.ImageIcon;
 import javax.swing.JTable;
+import javax.swing.table.TableColumn;
 
 public class Form_TrangChu extends javax.swing.JLayeredPane {
 
@@ -24,6 +25,17 @@ public class Form_TrangChu extends javax.swing.JLayeredPane {
 
     public void init() {
         slideShow1.initSlideshow(new Slide1(), new Slide2(), new Slide3(), new Slide4());
+        TableColumn nameColumn = table1.getColumnModel().getColumn(0);
+        nameColumn.setPreferredWidth(350); // Đặt chiều ngang mong muốn
+
+        TableColumn ageColumn = table1.getColumnModel().getColumn(1);
+        ageColumn.setPreferredWidth(250); // Đặt chiều ngang mong muốn
+
+        TableColumn genderColumn = table1.getColumnModel().getColumn(2);
+        genderColumn.setPreferredWidth(90); // Đặt chiều ngang mong muốn
+
+        TableColumn timeColumn = table1.getColumnModel().getColumn(3);
+        timeColumn.setPreferredWidth(40); // Đặt chiều ngang mong muốn
     }
 
     private void initTableData() {
