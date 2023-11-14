@@ -9,7 +9,7 @@ public class TimKiem_TatCa extends javax.swing.JPanel {
 
     public TimKiem_TatCa() {
         initComponents();
-        initTableData();
+//        initTableData();
         init();
     }
 
@@ -30,13 +30,13 @@ public class TimKiem_TatCa extends javax.swing.JPanel {
 
     }
 
-    private void initTableData() {
-        table1.addRow(new Model_Table(new ImageIcon(getClass().getResource("/icon/Music/nhiptraitim.jpg")), "Nhịp Trái Tim", "Ai Biết", "120K", "03:50").toRowTable());
-        table1.addRow(new Model_Table(new ImageIcon(getClass().getResource("/icon/Music/anhsedoi.jpg")), "Anh Sẽ Đợi", "Ai Biết", "120K", "03:50").toRowTable());
-        table1.addRow(new Model_Table(new ImageIcon(getClass().getResource("/icon/Music/nangamxadan.jpg")), "Nắng Ấm Xa Dần", "Sơn Tùng M-TP", "120K", "03:50").toRowTable());
-        table1.addRow(new Model_Table(new ImageIcon(getClass().getResource("/icon/Music/codonglon.jpg")), "Cổ Đông Lớn", "Ai Biết", "120K", "03:50").toRowTable());
-        table1.addRow(new Model_Table(new ImageIcon(getClass().getResource("/icon/Music/dungsai.jpg")), "Đừng Sai", "Ai Biết", "120K", "03:50").toRowTable());
-    }
+//    private void initTableData() {
+//        table1.addRow(new Model_Table(new ImageIcon(getClass().getResource("/icon/Music/nhiptraitim.jpg")), "Nhịp Trái Tim", "Ai Biết", "120K", "03:50").toRowTable());
+//        table1.addRow(new Model_Table(new ImageIcon(getClass().getResource("/icon/Music/anhsedoi.jpg")), "Anh Sẽ Đợi", "Ai Biết", "120K", "03:50").toRowTable());
+//        table1.addRow(new Model_Table(new ImageIcon(getClass().getResource("/icon/Music/nangamxadan.jpg")), "Nắng Ấm Xa Dần", "Sơn Tùng M-TP", "120K", "03:50").toRowTable());
+//        table1.addRow(new Model_Table(new ImageIcon(getClass().getResource("/icon/Music/codonglon.jpg")), "Cổ Đông Lớn", "Ai Biết", "120K", "03:50").toRowTable());
+//        table1.addRow(new Model_Table(new ImageIcon(getClass().getResource("/icon/Music/dungsai.jpg")), "Đừng Sai", "Ai Biết", "120K", "03:50").toRowTable());
+//    }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents

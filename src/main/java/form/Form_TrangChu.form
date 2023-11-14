@@ -26,28 +26,14 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" alignment="1" attributes="0">
-              <EmptySpace max="32767" attributes="0"/>
-              <Component id="slideShow1" min="-2" pref="841" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="41" max="-2" attributes="0"/>
-          </Group>
+          <Component id="slideShow1" alignment="0" pref="926" max="32767" attributes="0"/>
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="videoHot1" min="-2" max="-2" attributes="0"/>
                   <Component id="table1" min="-2" pref="885" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                      <Component id="top1001" max="32767" attributes="0"/>
-                      <Component id="chuDeHot2" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                      <Component id="tamTrangHomNay1" max="32767" attributes="0"/>
-                      <Component id="quocTeNoiBat2" max="32767" attributes="0"/>
-                      <Component id="vuTruNhacViet2" max="32767" attributes="0"/>
-                  </Group>
                   <Component id="jLabel1" min="-2" pref="236" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace pref="21" max="32767" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -55,52 +41,41 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="1" attributes="0">
               <Component id="slideShow1" min="-2" pref="340" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="40" max="-2" attributes="0"/>
-              <Component id="vuTruNhacViet2" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="40" max="-2" attributes="0"/>
-              <Component id="quocTeNoiBat2" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="40" max="-2" attributes="0"/>
-              <Component id="tamTrangHomNay1" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="50" max="-2" attributes="0"/>
-              <Component id="videoHot1" min="-2" pref="751" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="50" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
               <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="table1" min="-2" pref="690" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="50" max="-2" attributes="0"/>
-              <Component id="chuDeHot2" min="-2" pref="262" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="40" max="-2" attributes="0"/>
-              <Component id="top1001" min="-2" pref="270" max="-2" attributes="0"/>
-              <EmptySpace max="32767" attributes="0"/>
+              <EmptySpace pref="2461" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
   </Layout>
   <SubComponents>
     <Component class="SlideShow.SlideShow" name="slideShow1">
-    </Component>
-    <Component class="List.VuTruNhacViet" name="vuTruNhacViet2">
-    </Component>
-    <Component class="List.QuocTeNoiBat" name="quocTeNoiBat2">
-    </Component>
-    <Component class="List.TamTrangHomNay" name="tamTrangHomNay1">
-    </Component>
-    <Component class="List.ChuDeHot" name="chuDeHot2">
-    </Component>
-    <Component class="List.Top100" name="top1001">
+      <Properties>
+        <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+          <Color blue="31" green="26" red="1d" type="rgb"/>
+        </Property>
+      </Properties>
     </Component>
     <Component class="Table.TableMusic" name="table1">
       <Properties>
         <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-          <Table columnCount="4" rowCount="0">
+          <Table columnCount="5" rowCount="0">
             <Column editable="true" title="Name" type="java.lang.Object"/>
             <Column editable="true" title="Sing" type="java.lang.Object"/>
             <Column editable="true" title="View" type="java.lang.Object"/>
             <Column editable="true" title="Time" type="java.lang.Object"/>
+            <Column editable="true" title="Ma" type="java.lang.Object"/>
           </Table>
         </Property>
         <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
           <TableColumnModel selectionModel="0">
+            <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+              <Title/>
+              <Editor/>
+              <Renderer/>
+            </Column>
             <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
               <Title/>
               <Editor/>
@@ -141,8 +116,6 @@
         </Property>
         <Property name="text" type="java.lang.String" value="D&#xe0;nh Ri&#xea;ng Cho B&#x1ea1;n"/>
       </Properties>
-    </Component>
-    <Component class="List.VideoHot" name="videoHot1">
     </Component>
   </SubComponents>
 </Form>

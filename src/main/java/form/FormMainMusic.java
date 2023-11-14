@@ -1,9 +1,14 @@
 package form;
 
+import entity.BaiHatEntity;
+import entity.BaiHatStateManager;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
 import model.Model_MainMusic;
 
 public class FormMainMusic extends javax.swing.JPanel {
+
 
     public FormMainMusic() {
         initComponents();
@@ -11,7 +16,24 @@ public class FormMainMusic extends javax.swing.JPanel {
     }
 
     public void init() {
-        list.addItem(new Model_MainMusic("Lạc Trôi", "Sơn Tùng M-TP", new ImageIcon(getClass().getResource("/icon/Music/lactroi.jpg"))));
+        list.addItem(new Model_MainMusic("Nghe Nhạc Thôi Nào!", "Nhacuatoi", new ImageIcon(getClass().getResource("/icon/Music/MainMusic.jpg"))));
+    }
+
+//    public void fillMusic() {
+//        BaiHatEntity selectedBaiHat = BaiHatStateManager.getSelectedBaiHat();
+//        if (selectedBaiHat != null) {
+//            list.addItem(new Model_MainMusic(selectedBaiHat.getTenBh(), selectedBaiHat.getCaSi(), new ImageIcon(getClass().getResource(selectedBaiHat.getAnh()))));
+//        } else {
+//            list.addItem(new Model_MainMusic("Nghe Nhạc Thôi Nào!", null, new ImageIcon(getClass().getResource("/icon/Music/MainMusic.jpg"))));
+//        }
+//    }
+    public void fillMusic(BaiHatEntity selectedBaiHat) {
+        if (selectedBaiHat != null) {
+            JOptionPane.showMessageDialog(null, selectedBaiHat.getTenBh());
+            list.addItem(new Model_MainMusic(selectedBaiHat.getTenBh(), selectedBaiHat.getCaSi(), new ImageIcon(getClass().getResource(selectedBaiHat.getAnh()))));
+        } else {
+            System.out.println("null");
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -23,7 +45,7 @@ public class FormMainMusic extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
+        lbTimeEnd = new javax.swing.JLabel();
         slider1 = new swing.Slider();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
@@ -52,9 +74,9 @@ public class FormMainMusic extends javax.swing.JPanel {
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setText("00:00");
 
-        jLabel4.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
-        jLabel4.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel4.setText("03:21");
+        lbTimeEnd.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
+        lbTimeEnd.setForeground(new java.awt.Color(255, 255, 255));
+        lbTimeEnd.setText("03:21");
 
         jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/play.png"))); // NOI18N
         jLabel5.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -100,7 +122,7 @@ public class FormMainMusic extends javax.swing.JPanel {
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(slider1, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jLabel4))
+                                .addComponent(lbTimeEnd))
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(20, 20, 20)
                                 .addComponent(jLabel6)
@@ -125,7 +147,7 @@ public class FormMainMusic extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(slider1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lbTimeEnd, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -143,12 +165,12 @@ public class FormMainMusic extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
+    private javax.swing.JLabel lbTimeEnd;
     private component3.ListMainMusic<String> list;
     private swing.Slider slider1;
     // End of variables declaration//GEN-END:variables

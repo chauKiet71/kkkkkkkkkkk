@@ -1,5 +1,6 @@
 package NgheGiHomNay;
 
+import TimKiem.TimKiem_TatCa;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
@@ -7,6 +8,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
+import javax.swing.JScrollPane;
 
 public class Top100 extends javax.swing.JPanel {
 
@@ -73,35 +75,17 @@ public class Top100 extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPanel1 = new javax.swing.JPanel();
+        top100VietNam1 = new NgheGiHomNay.Top100VietNam();
+        jSeparator1 = new javax.swing.JSeparator();
+        jPanel2 = new javax.swing.JPanel();
         lbVietNam = new javax.swing.JLabel();
         lbAuMy = new javax.swing.JLabel();
         lbChauA = new javax.swing.JLabel();
         lbKhongLoi = new javax.swing.JLabel();
-        jPanel1 = new javax.swing.JPanel();
-        top100VietNam1 = new NgheGiHomNay.Top100VietNam();
-        jSeparator1 = new javax.swing.JSeparator();
+        jLabel1 = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(29, 38, 49));
-
-        lbVietNam.setFont(new java.awt.Font("Segoe UI", 1, 15)); // NOI18N
-        lbVietNam.setForeground(new java.awt.Color(255, 255, 255));
-        lbVietNam.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lbVietNam.setText("Việt nam");
-
-        lbAuMy.setFont(new java.awt.Font("Segoe UI", 1, 15)); // NOI18N
-        lbAuMy.setForeground(new java.awt.Color(255, 255, 255));
-        lbAuMy.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lbAuMy.setText("Âu Mỹ");
-
-        lbChauA.setFont(new java.awt.Font("Segoe UI", 1, 15)); // NOI18N
-        lbChauA.setForeground(new java.awt.Color(255, 255, 255));
-        lbChauA.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lbChauA.setText("Châu Á");
-
-        lbKhongLoi.setFont(new java.awt.Font("Segoe UI", 1, 15)); // NOI18N
-        lbKhongLoi.setForeground(new java.awt.Color(255, 255, 255));
-        lbKhongLoi.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lbKhongLoi.setText("Không Lời");
 
         jPanel1.setOpaque(false);
 
@@ -125,12 +109,34 @@ public class Top100 extends javax.swing.JPanel {
         jSeparator1.setForeground(new java.awt.Color(204, 204, 204));
         jSeparator1.setOpaque(true);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(203, 203, 203)
+        jPanel2.setOpaque(false);
+
+        lbVietNam.setFont(new java.awt.Font("Segoe UI", 1, 15)); // NOI18N
+        lbVietNam.setForeground(new java.awt.Color(255, 255, 255));
+        lbVietNam.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lbVietNam.setText("Việt nam");
+
+        lbAuMy.setFont(new java.awt.Font("Segoe UI", 1, 15)); // NOI18N
+        lbAuMy.setForeground(new java.awt.Color(255, 255, 255));
+        lbAuMy.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lbAuMy.setText("Âu Mỹ");
+
+        lbChauA.setFont(new java.awt.Font("Segoe UI", 1, 15)); // NOI18N
+        lbChauA.setForeground(new java.awt.Color(255, 255, 255));
+        lbChauA.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lbChauA.setText("Châu Á");
+
+        lbKhongLoi.setFont(new java.awt.Font("Segoe UI", 1, 15)); // NOI18N
+        lbKhongLoi.setForeground(new java.awt.Color(255, 255, 255));
+        lbKhongLoi.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lbKhongLoi.setText("Không Lời");
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(0, 0, 0)
                 .addComponent(lbVietNam, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lbAuMy, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -138,20 +144,40 @@ public class Top100 extends javax.swing.JPanel {
                 .addComponent(lbChauA, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lbKhongLoi, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jSeparator1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(16, 16, 16))
         );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lbVietNam, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lbAuMy, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lbChauA, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lbKhongLoi, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 0, 0)
+                .addGap(0, 19, Short.MAX_VALUE))
+            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jSeparator1)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 541, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(181, 181, 181))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(14, 14, 14)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(10, 10, 10)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 1, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(17, 17, 17)
                 .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -160,7 +186,9 @@ public class Top100 extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JLabel lbAuMy;
     private javax.swing.JLabel lbChauA;

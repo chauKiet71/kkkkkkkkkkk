@@ -1,9 +1,6 @@
-package form;
+package NhacCuaToi;
 
-import TimKiem.TimKiem_BaiHat;
-import TimKiem.TimKiem_Playlist;
 import TimKiem.TimKiem_TatCa;
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
@@ -13,18 +10,19 @@ import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.border.Border;
+import swing.ScrollBarr;
 
-public class FormTimKiemItem extends javax.swing.JPanel {
+public class NgheGanDay extends javax.swing.JPanel {
 
     private static JLabel selectedLabel = null;
 
-    public FormTimKiemItem() {
+    public NgheGanDay() {
         initComponents();
         init();
     }
 
     public void init() {
-        hover(lbTatCa);
+        content.setVerticalScrollBar(new ScrollBarr());
         hover(lbBaiHat);
         hover(lbList);
     }
@@ -83,34 +81,26 @@ public class FormTimKiemItem extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        textFieldAnimation1 = new swing.TextFieldAnimation();
-        content = new javax.swing.JScrollPane();
-        timKiem_TatCa1 = new TimKiem.TimKiem_TatCa();
+        jLabel1 = new javax.swing.JLabel();
+        jSeparator1 = new javax.swing.JSeparator();
         jPanel1 = new javax.swing.JPanel();
-        lbTatCa = new javax.swing.JLabel();
         lbBaiHat = new javax.swing.JLabel();
         lbList = new javax.swing.JLabel();
+        jSeparator2 = new javax.swing.JSeparator();
+        content = new javax.swing.JScrollPane();
+        ngheGanDay_BaiHat1 = new NhacCuaToi.NgheGanDay_BaiHat();
 
         setBackground(new java.awt.Color(29, 38, 49));
 
-        content.setBackground(new java.awt.Color(29, 38, 49));
-        content.setBorder(null);
-        content.setForeground(new java.awt.Color(0, 0, 0));
-        content.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        content.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
-        content.setViewportView(timKiem_TatCa1);
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 0, 153));
+        jLabel1.setText("Nghe gần đây");
+
+        jSeparator1.setBackground(new java.awt.Color(102, 102, 102));
+        jSeparator1.setForeground(new java.awt.Color(102, 102, 102));
+        jSeparator1.setOpaque(true);
 
         jPanel1.setOpaque(false);
-
-        lbTatCa.setFont(new java.awt.Font("Segoe UI", 1, 15)); // NOI18N
-        lbTatCa.setForeground(new java.awt.Color(255, 255, 255));
-        lbTatCa.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lbTatCa.setText("Tất cả");
-        lbTatCa.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                lbTatCaMouseClicked(evt);
-            }
-        });
 
         lbBaiHat.setFont(new java.awt.Font("Segoe UI", 1, 15)); // NOI18N
         lbBaiHat.setForeground(new java.awt.Color(255, 255, 255));
@@ -119,6 +109,9 @@ public class FormTimKiemItem extends javax.swing.JPanel {
         lbBaiHat.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 lbBaiHatMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                lbBaiHatMouseEntered(evt);
             }
         });
 
@@ -138,66 +131,64 @@ public class FormTimKiemItem extends javax.swing.JPanel {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(lbTatCa, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lbBaiHat, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lbList, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(28, Short.MAX_VALUE))
+                .addComponent(lbBaiHat, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(lbList, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(180, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(0, 0, 0)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lbTatCa, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lbBaiHat, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lbList, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(19, 19, 19))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
+
+        jSeparator2.setBackground(new java.awt.Color(102, 102, 102));
+        jSeparator2.setOpaque(true);
+
+        content.setBackground(new java.awt.Color(29, 38, 49));
+        content.setBorder(null);
+        content.setForeground(new java.awt.Color(51, 51, 255));
+        content.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        content.setOpaque(false);
+        content.setViewportView(ngheGanDay_BaiHat1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(257, 257, 257))
+            .addComponent(jSeparator2)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(content, javax.swing.GroupLayout.PREFERRED_SIZE, 906, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(textFieldAnimation1, javax.swing.GroupLayout.PREFERRED_SIZE, 465, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(14, Short.MAX_VALUE))
+                .addGap(21, 21, 21)
+                .addComponent(jLabel1)
+                .addGap(10, 10, 10)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 1, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addComponent(content, javax.swing.GroupLayout.PREFERRED_SIZE, 926, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(textFieldAnimation1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(8, 8, 8))
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(27, 27, 27)
+                .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 1, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 56, Short.MAX_VALUE)
-                .addGap(10, 10, 10)
-                .addComponent(content, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0))
+                .addComponent(content, javax.swing.GroupLayout.DEFAULT_SIZE, 602, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void lbTatCaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbTatCaMouseClicked
-        TimKiem_TatCa wel = new TimKiem_TatCa();
-        wel.setSize(926, 3000);
-        wel.setLocation(0, 0);
-
-        JScrollPane scrollPane = new JScrollPane(wel);
-        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
-        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        scrollPane.setBorder(null);
-        content.setViewportView(scrollPane);
-    }//GEN-LAST:event_lbTatCaMouseClicked
-
     private void lbBaiHatMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbBaiHatMouseClicked
-        TimKiem_BaiHat wel = new TimKiem_BaiHat();
+        NgheGanDay_BaiHat wel = new NgheGanDay_BaiHat();
         wel.setSize(926, 3000);
         wel.setLocation(0, 0);
 
@@ -209,7 +200,7 @@ public class FormTimKiemItem extends javax.swing.JPanel {
     }//GEN-LAST:event_lbBaiHatMouseClicked
 
     private void lbListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbListMouseClicked
-        TimKiem_Playlist wel = new TimKiem_Playlist();
+        NgheGanDay_Playlist wel = new NgheGanDay_Playlist();
         wel.setSize(926, 3000);
         wel.setLocation(0, 0);
 
@@ -220,14 +211,19 @@ public class FormTimKiemItem extends javax.swing.JPanel {
         content.setViewportView(scrollPane);
     }//GEN-LAST:event_lbListMouseClicked
 
+    private void lbBaiHatMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbBaiHatMouseEntered
+        // TODO add your handling code here:
+    }//GEN-LAST:event_lbBaiHatMouseEntered
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane content;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JSeparator jSeparator2;
     private javax.swing.JLabel lbBaiHat;
     private javax.swing.JLabel lbList;
-    private javax.swing.JLabel lbTatCa;
-    private swing.TextFieldAnimation textFieldAnimation1;
-    private TimKiem.TimKiem_TatCa timKiem_TatCa1;
+    private NhacCuaToi.NgheGanDay_BaiHat ngheGanDay_BaiHat1;
     // End of variables declaration//GEN-END:variables
 }

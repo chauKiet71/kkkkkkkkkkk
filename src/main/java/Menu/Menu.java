@@ -33,6 +33,7 @@ public class Menu extends JComponent {
         {"Trang Chủ"},
         {"Khám Phá","Bài Hát", "Playlist", "Zingchart","Nghệ Sỹ"},
         {"Nghe Gì Hôm Nay","Chủ Đề","Tuyển Tập", "Top 100"},
+        {"NhacCuaToi","Nghe Gần Đây","Bài Hát Yêu Thích", "Playlist","Đã Tải Lên"},
         {"Trợ giúp"},
 //        {"Advanced UI", "Cropper", "Owl Carousel", "Sweet Alert"},
     };
@@ -45,7 +46,7 @@ public class Menu extends JComponent {
         layout = new MigLayout("wrap 1, fillx, gapy 0, inset 2", "fill");
         setLayout(layout);
         setOpaque(true);
-         setFont(new java.awt.Font("sansserif", 0, 15));
+         setFont(new Font("Arial", Font.BOLD, 15));
         //  Init MenuItem
         for (int i = 0; i < menuItems.length; i++) {
             addMenu(menuItems[i][0], i);
@@ -131,7 +132,7 @@ public class Menu extends JComponent {
         Graphics2D g2 = (Graphics2D) grphcs.create();
 //        g2.setColor(new Color(21, 110, 71));
         g2.setColor(new Color(29,38,49)); //set màu cho menu
-        g2.setFont(new Font("sansserif", 14, Font.BOLD));
+        g2.setFont(new Font("Arial", 14, Font.BOLD));
         g2.fill(new Rectangle2D.Double(0, 0, getWidth(), getHeight()));
         super.paintComponent(grphcs);
     }

@@ -8,18 +8,20 @@ public class Model_Table {
     private Icon icon;
     private String name;
     private String sing;
-    private String view;
+    private Integer view;
     private String time;
+    private String maBh;
 
     public Model_Table() {
     }
 
-    public Model_Table(Icon icon, String name, String sing, String view, String time) {
+    public Model_Table(Icon icon, String name, String sing, Integer view, String time, String maBh) {
         this.icon = icon;
         this.name = name;
         this.sing = sing;
         this.view = view;
         this.time = time;
+        this.maBh = maBh;
     }
 
     public Icon getIcon() {
@@ -46,11 +48,11 @@ public class Model_Table {
         this.sing = sing;
     }
 
-    public String getView() {
+    public Integer getView() {
         return view;
     }
 
-    public void setView(String view) {
+    public void setView(Integer view) {
         this.view = view;
     }
 
@@ -62,8 +64,16 @@ public class Model_Table {
         this.time = time;
     }
 
+    public String getMaBh() {
+        return maBh;
+    }
+
+    public void setMaBh(String maBh) {
+        this.maBh = maBh;
+    }
+
     public Object[] toRowTable() {
-        return new Object[]{new Model_ProfileTable(icon, name), sing, view, time};
+        return new Object[]{new Model_ProfileTable(icon, name), sing, view, time, maBh};
     }
 
 }

@@ -1,11 +1,9 @@
-
 package Table;
 
 import javax.swing.Icon;
 
-
 public class Model_ProfileTable {
-    
+
     private Icon icon;
     private String name;
 
@@ -32,6 +30,5 @@ public class Model_ProfileTable {
     public void setName(String name) {
         this.name = name;
     }
-    
-    
+
 }
