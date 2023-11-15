@@ -8,12 +8,12 @@ package SlideShow;
  *
  * @author TRONG NGHIA
  */
-public class Slide2 extends javax.swing.JPanel {
+public class Slide6 extends javax.swing.JPanel {
 
     /**
      * Creates new form Slide1
      */
-    public Slide2() {
+    public Slide6() {
         initComponents();
     }
 
@@ -30,7 +30,7 @@ public class Slide2 extends javax.swing.JPanel {
 
         setBackground(new java.awt.Color(255, 102, 102));
 
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/SlideShow/2.png"))); // NOI18N
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/SlideShow/6.png"))); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);

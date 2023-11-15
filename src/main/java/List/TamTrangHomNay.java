@@ -16,7 +16,7 @@ public class TamTrangHomNay extends javax.swing.JPanel {
     }
 
     public void init() {
-        listChill1.addItem(new Model_Chill(new ImageIcon(getClass().getResource("/icon/Chill/tt1.jpg")), "Tâm Trạng Khi Yêu"));
+        listChill1.addItem(new Model_Chill(new ImageIcon(getClass().getResource("/icon/Chill/tt5.jpg")), "Tâm Trạng Khi Yêu"));
         listChill2.addItem(new Model_Chill(new ImageIcon(getClass().getResource("/icon/Chill/tt2.jpg")), "Speed Up Việt"));
         listChill3.addItem(new Model_Chill(new ImageIcon(getClass().getResource("/icon/Chill/tt3.jpg")), "Thời Tiết Hôm Nay Mưa"));
         listChill4.addItem(new Model_Chill(new ImageIcon(getClass().getResource("/icon/Chill/tt4.jpg")), "Nhạc Việt Chill"));

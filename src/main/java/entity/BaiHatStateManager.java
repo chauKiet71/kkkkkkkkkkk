@@ -2,9 +2,9 @@ package entity;
 
 public class BaiHatStateManager {
 
-    private static BaiHatEntity selectedBaiHat;
+    public static BaiHatEntity selectedBaiHat;
 
-    private BaiHatStateManager() {
+    public BaiHatStateManager() {
     }
 
     public static BaiHatEntity getSelectedBaiHat() {

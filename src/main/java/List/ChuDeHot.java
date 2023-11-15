@@ -1,10 +1,5 @@
 package List;
 
-import component2.ListChill;
-import java.awt.Component;
-import java.awt.Cursor;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import javax.swing.ImageIcon;
 import model.Model_Chill;
 
@@ -16,39 +11,11 @@ public class ChuDeHot extends javax.swing.JPanel {
     }
 
     public void init() {
-        listChill1.addItem(new Model_Chill(new ImageIcon(getClass().getResource("/icon/Chill/hot1.png")), ""));
+        listChill1.addItem(new Model_Chill(new ImageIcon(getClass().getResource("/icon/Chill/hot7.png")), ""));
         listChill2.addItem(new Model_Chill(new ImageIcon(getClass().getResource("/icon/Chill/hot2.png")), ""));
         listChill3.addItem(new Model_Chill(new ImageIcon(getClass().getResource("/icon/Chill/hot3.png")), ""));
-        listChill4.addItem(new Model_Chill(new ImageIcon(getClass().getResource("/icon/Chill/hot4.png")), ""));
-        setHoverCursor(listChill1);
-        setHoverCursor(listChill2);
-        setHoverCursor(listChill3);
-        setHoverCursor(listChill4);
-    }
+        listChill4.addItem(new Model_Chill(new ImageIcon(getClass().getResource("/icon/Chill/hot8.png")), ""));
 
-    private static void setHoverCursor(ListChill<?> listChill) {
-        listChill.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                setHandCursor(listChill);
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-                setDefaultCursor(listChill);
-            }
-        });
-    }
-
-    private static void setHandCursor(Component component) {
-        Cursor handCursor = new Cursor(Cursor.HAND_CURSOR);
-        component.setCursor(handCursor);
-    }
-
-    // Đặt hình mặc định cho chuột
-    private static void setDefaultCursor(Component component) {
-        Cursor defaultCursor = new Cursor(Cursor.DEFAULT_CURSOR);
-        component.setCursor(defaultCursor);
     }
 
     @SuppressWarnings("unchecked")
@@ -90,10 +57,10 @@ public class ChuDeHot extends javax.swing.JPanel {
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(listChill1, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(listChill2, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(listChill3, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(listChill4, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(listChill1, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(listChill2, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(listChill3, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(listChill4, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(0, 0, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents

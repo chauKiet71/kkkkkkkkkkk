@@ -17,10 +17,10 @@ public class VuTruNhacViet extends javax.swing.JPanel {
     }
 
     public void init() {
-        listChill1.addItem(new Model_Chill(new ImageIcon(getClass().getResource("/icon/Chill/viet1.jpg")), "Ngốc à, mình chỉ iu mỗi mình cậu mà thôiiiii"));
-        listChill2.addItem(new Model_Chill(new ImageIcon(getClass().getResource("/icon/Chill/viet2.jpg")), "Nhạc chill cho tín đồ của Pop"));
-        listChill3.addItem(new Model_Chill(new ImageIcon(getClass().getResource("/icon/Chill/viet3.jpg")), "Những giai điệu nhẹ nhàng dễ thương"));
-        listChill4.addItem(new Model_Chill(new ImageIcon(getClass().getResource("/icon/Chill/viet4.jpg")), "Nâng niu đôi tay cùng R&B Việt"));
+        listChill1.addItem(new Model_Chill(new ImageIcon(getClass().getResource("/icon/Chill/viet1.jpg")), "Hit Quốc Dân"));
+        listChill2.addItem(new Model_Chill(new ImageIcon(getClass().getResource("/icon/Chill/viet2.jpg")), "Nhạc Mới Triển Vọng"));
+        listChill3.addItem(new Model_Chill(new ImageIcon(getClass().getResource("/icon/Chill/viet3.jpg")), "V-Pop Thịnh Hành"));
+        listChill4.addItem(new Model_Chill(new ImageIcon(getClass().getResource("/icon/Chill/viet4.jpg")), "Gen Gì Gen Z"));
         setHoverCursor(listChill1);
         setHoverCursor(listChill2);
         setHoverCursor(listChill3);
@@ -100,10 +100,10 @@ public class VuTruNhacViet extends javax.swing.JPanel {
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(listChill1, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(listChill2, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(listChill3, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(listChill4, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(listChill1, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(listChill2, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(listChill3, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(listChill4, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(0, 0, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
