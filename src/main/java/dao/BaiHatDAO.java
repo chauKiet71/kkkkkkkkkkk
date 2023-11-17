@@ -11,6 +11,7 @@ public class BaiHatDAO {
 
     String sql_selectAll = "Select * from BaiHat";
     String sql_selectById = "Select * from BaiHat where MaBh = ?";
+    String sql_selectByBaiHat = "Select * from BaiHat where tenBh like '%'+' ?'+'%'";
 
     public List<BaiHatEntity> selectAll() {
         return this.selectBySql(sql_selectAll);
@@ -18,6 +19,14 @@ public class BaiHatDAO {
 
     public BaiHatEntity selectById(String id) {
         List<BaiHatEntity> list = this.selectBySql(sql_selectById, id);
+        if (list.isEmpty()) {
+            return null;
+        }
+        return list.get(0);
+    }
+
+    public BaiHatEntity selectByNameMusic(String id) {
+        List<BaiHatEntity> list = this.selectBySql(sql_selectByBaiHat, id);
         if (list.isEmpty()) {
             return null;
         }

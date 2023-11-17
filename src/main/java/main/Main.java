@@ -329,7 +329,7 @@ public class Main extends javax.swing.JFrame {
                         fis = new FileInputStream(file);
                         bis = new BufferedInputStream(fis);
                         player = new Player(bis);
-
+                        
                         fis.skip(totalLength - pause);
 
                         new Thread() {
