@@ -8,13 +8,8 @@ import utils.XJdbcc;
 
 public class tableDAO {
 
-    String sql_insert = "insert into NhanVien(MaNV, MatKhau, HoTen, Email, VaiTro) values (?,?,?,?,?)";
-    String sql_update = "update NhanVien set MatKhau = ?, HoTen = ?, Email = ?, VaiTro = ? where MaNV = ?";
-    String sql_delete = "Delete from NhanVien where MaNV = ?";
     String sql_selectAll = "Select * from BaiHat";
     String sql_selectById = "Select MaBh from BaiHat where tenBh = ?";
-    String sql_selectByMatKhau = "Select * from NhanVien where MatKhau = ?";
-    String sql_selectByEmail = "Select * from NhanVien where Email = ?";
 
     public List<Model_Table> selectAll() {
         return this.selectBySql(sql_selectAll);

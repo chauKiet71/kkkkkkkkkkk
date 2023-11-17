@@ -22,41 +22,46 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
-              <EmptySpace min="-2" pref="19" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="videoHot1" min="-2" max="-2" attributes="0"/>
-                  <Component id="tamTrangHomNay1" min="-2" max="-2" attributes="0"/>
-                  <Component id="quocTeNoiBat1" min="-2" max="-2" attributes="0"/>
-                  <Component id="vuTruNhacViet1" min="-2" max="-2" attributes="0"/>
+                  <Component id="tamTrangHoiSuy1" min="-2" max="-2" attributes="0"/>
+                  <Component id="ngheLaYeuDoi1" min="-2" max="-2" attributes="0"/>
+                  <Component id="rapViet2" min="-2" max="-2" attributes="0"/>
+                  <Component id="remixLaDance1" min="-2" max="-2" attributes="0"/>
+                  <Component id="chill1" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace pref="22" max="32767" attributes="0"/>
+              <EmptySpace pref="21" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
-              <EmptySpace max="-2" attributes="0"/>
-              <Component id="vuTruNhacViet1" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="40" max="-2" attributes="0"/>
-              <Component id="quocTeNoiBat1" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="40" max="-2" attributes="0"/>
-              <Component id="tamTrangHomNay1" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="40" max="-2" attributes="0"/>
-              <Component id="videoHot1" min="-2" pref="750" max="-2" attributes="0"/>
-              <EmptySpace pref="40" max="32767" attributes="0"/>
+              <EmptySpace min="-2" pref="23" max="-2" attributes="0"/>
+              <Component id="chill1" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="45" max="-2" attributes="0"/>
+              <Component id="remixLaDance1" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="45" max="-2" attributes="0"/>
+              <Component id="rapViet2" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="45" max="-2" attributes="0"/>
+              <Component id="ngheLaYeuDoi1" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="45" max="-2" attributes="0"/>
+              <Component id="tamTrangHoiSuy1" min="-2" max="-2" attributes="0"/>
+              <EmptySpace pref="45" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Component class="List.VuTruNhacViet" name="vuTruNhacViet1">
+    <Component class="List.Chill" name="chill1">
     </Component>
-    <Component class="List.QuocTeNoiBat" name="quocTeNoiBat1">
+    <Component class="List.RemixLaDance" name="remixLaDance1">
     </Component>
-    <Component class="List.TamTrangHomNay" name="tamTrangHomNay1">
+    <Component class="List.RapViet" name="rapViet2">
     </Component>
-    <Component class="List.VideoHot" name="videoHot1">
+    <Component class="List.NgheLaYeuDoi" name="ngheLaYeuDoi1">
+    </Component>
+    <Component class="List.TamTrangHoiSuy" name="tamTrangHoiSuy1">
     </Component>
   </SubComponents>
 </Form>

@@ -10,19 +10,19 @@ import javax.swing.ImageIcon;
 import model.Model_Chill;
 
 
-public class QuocTeNoiBat extends javax.swing.JPanel {
+public class RemixLaDance extends javax.swing.JPanel {
 
 
-    public QuocTeNoiBat() {
+    public RemixLaDance() {
         initComponents();
       init();
     }
     
      public void init(){
-        listChill1.addItem(new Model_Chill(new ImageIcon(getClass().getResource("/icon/Chill/qt1.jpg")), "Quốc Tế Thịnh Hành"));
-        listChill2.addItem(new Model_Chill(new ImageIcon(getClass().getResource("/icon/Chill/qt2.jpg")), "K-Pop Today's Hits"));
-        listChill3.addItem(new Model_Chill(new ImageIcon(getClass().getResource("/icon/Chill/qt3.jpg")), "C-Pop Favorites"));
-        listChill4.addItem(new Model_Chill(new ImageIcon(getClass().getResource("/icon/Chill/qt4.jpg")), "Ngày Mới Nhạc Mới"));
+        listChill1.addItem(new Model_Chill(new ImageIcon(getClass().getResource("/icon/remix/1.jpg")), "Remix Việt Ngày Nay"));
+        listChill2.addItem(new Model_Chill(new ImageIcon(getClass().getResource("/icon/remix/2.jpg")), "Dance Việt Hay Nhất"));
+        listChill3.addItem(new Model_Chill(new ImageIcon(getClass().getResource("/icon/remix/10.jpg")), "Tiktok Remix"));
+        listChill4.addItem(new Model_Chill(new ImageIcon(getClass().getResource("/icon/remix/5.jpg")), "Nhạc Trẻ Vinahouse"));
          setHoverCursor(listChill1);
          setHoverCursor(listChill2);
          setHoverCursor(listChill3);
@@ -65,9 +65,17 @@ public class QuocTeNoiBat extends javax.swing.JPanel {
 
         setOpaque(false);
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 20)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel1.setText("Quốc Tế Nổi Bật");
+        jLabel1.setText("Remix Là Dance Luôn");
+
+        listChill1.setBorder(null);
+
+        listChill2.setBorder(null);
+
+        listChill3.setBorder(null);
+
+        listChill4.setBorder(null);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -75,7 +83,6 @@ public class QuocTeNoiBat extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(listChill1, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(15, 15, 15)
@@ -83,19 +90,20 @@ public class QuocTeNoiBat extends javax.swing.JPanel {
                         .addGap(15, 15, 15)
                         .addComponent(listChill3, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(15, 15, 15)
-                        .addComponent(listChill4, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(listChill4, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(20, 20, 20)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(listChill1, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(listChill2, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(listChill3, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(listChill4, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(listChill1, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(listChill2, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(listChill3, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(listChill4, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(0, 0, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents

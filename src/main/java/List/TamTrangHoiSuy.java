@@ -1,7 +1,6 @@
 package List;
 
 import component2.ListChill;
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.event.MouseAdapter;
@@ -9,18 +8,18 @@ import java.awt.event.MouseEvent;
 import javax.swing.ImageIcon;
 import model.Model_Chill;
 
-public class VuTruNhacViet extends javax.swing.JPanel {
+public class TamTrangHoiSuy extends javax.swing.JPanel {
 
-    public VuTruNhacViet() {
+    public TamTrangHoiSuy() {
         initComponents();
         init();
     }
 
     public void init() {
-        listChill1.addItem(new Model_Chill(new ImageIcon(getClass().getResource("/icon/Chill/viet1.jpg")), "Hit Quốc Dân"));
-        listChill2.addItem(new Model_Chill(new ImageIcon(getClass().getResource("/icon/Chill/viet2.jpg")), "Nhạc Mới Triển Vọng"));
-        listChill3.addItem(new Model_Chill(new ImageIcon(getClass().getResource("/icon/Chill/viet3.jpg")), "V-Pop Thịnh Hành"));
-        listChill4.addItem(new Model_Chill(new ImageIcon(getClass().getResource("/icon/Chill/viet4.jpg")), "Gen Gì Gen Z"));
+        listChill1.addItem(new Model_Chill(new ImageIcon(getClass().getResource("/icon/tamTrangHoiSuy/2.jpg")), "Tâm Tình Lâu Phai"));
+        listChill2.addItem(new Model_Chill(new ImageIcon(getClass().getResource("/icon/tamTrangHoiSuy/3.jpg")), "Nhạc Để Suy"));
+        listChill3.addItem(new Model_Chill(new ImageIcon(getClass().getResource("/icon/tamTrangHoiSuy/4.jpg")), "Dạo Quanh Thành Phố Một Mình"));
+        listChill4.addItem(new Model_Chill(new ImageIcon(getClass().getResource("/icon/tamTrangHoiSuy/5.jpg")), "Vẫn Mộng Mơ Dù Tình Đã Vỡ"));
         setHoverCursor(listChill1);
         setHoverCursor(listChill2);
         setHoverCursor(listChill3);
@@ -64,18 +63,9 @@ public class VuTruNhacViet extends javax.swing.JPanel {
 
         setOpaque(false);
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 20)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel1.setText("Vũ Trụ Nhạc Việt");
-
-        listChill1.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                listChill1MouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                listChill1MouseExited(evt);
-            }
-        });
+        jLabel1.setText("Tâm Trạng Hơi Suy");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -98,23 +88,15 @@ public class VuTruNhacViet extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(20, 20, 20)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(listChill1, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(listChill2, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(listChill3, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(listChill4, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(listChill1, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(listChill2, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(listChill3, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(listChill4, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(0, 0, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
-
-    private void listChill1MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_listChill1MouseEntered
-//        setHandCursor(listChill1);
-    }//GEN-LAST:event_listChill1MouseEntered
-
-    private void listChill1MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_listChill1MouseExited
-//        setDefaultCursor(listChill1)
-    }//GEN-LAST:event_listChill1MouseExited
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

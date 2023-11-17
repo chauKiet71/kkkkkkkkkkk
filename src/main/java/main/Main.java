@@ -10,12 +10,13 @@ import NhacCuaToi.BaiHatYeuThich;
 import NhacCuaToi.DaTaiLen;
 import NhacCuaToi.NgheGanDay;
 import NhacCuaToi.TaoPlaylist;
+import TimKiem.FormTimKiem;
 import TimKiem.TimKiem_TatCa;
 import entity.BaiHatEntity;
 import entity.BaiHatStateManager;
 import form.FormTimKiemItem;
+import form.FormTrangChu;
 import form.Form_ChuDe;
-import form.Form_TrangChu;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -31,6 +32,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
+import javazoom.jl.decoder.JavaLayerException;
 import swing.ScrollBarr;
 import utils.EventManager;
 import javazoom.jl.player.Player;
@@ -39,11 +41,12 @@ public class Main extends javax.swing.JFrame {
 
     private Player player;
     private long totalLength;
-    private long pausePosition;
+    private long pause;
     private FileInputStream fis;
-//    private File myfile = null;
+    private File myfile = null;
     private BufferedInputStream bis;
     private boolean isPaused;
+
     public TimKiem_TatCa songpanel;
 
     private boolean isPlaying = false;
@@ -56,11 +59,11 @@ public class Main extends javax.swing.JFrame {
             @Override
             public void selected(int index, int subIndex) {
                 if (index == 0) {
-                    FormTimKiemItem wel = new FormTimKiemItem();
+                    FormTimKiem wel = new FormTimKiem();
                     setPanel(wel);
                     lbTitle.setText("Tìm kiếm");
                 } else if (index == 1) {
-                    Form_TrangChu wel = new Form_TrangChu();
+                    FormTrangChu wel = new FormTrangChu();
                     setPanel(wel);
                     lbTitle.setText("Trang Chủ");
                 } else if (index == 2 && subIndex == 1) {
@@ -112,7 +115,7 @@ public class Main extends javax.swing.JFrame {
 
         init();
 
-        EventManager.addListener(Form_TrangChu.BAI_HAT_SELECTED_EVENT, (event, data) -> {
+        EventManager.addListener(FormTrangChu.BAI_HAT_SELECTED_EVENT, (event, data) -> {
             if (data instanceof BaiHatEntity) {
                 BaiHatEntity selectedBaiHat = (BaiHatEntity) data;
                 manager.setSelectedBaiHat(selectedBaiHat);
@@ -158,7 +161,7 @@ public class Main extends javax.swing.JFrame {
         lbName.setText(selectedBaiHat.getTenBh());
         lbName2.setText(selectedBaiHat.getCaSi());
         lbTimeEnd.setText(selectedBaiHat.getThoiGian());
-        lbPlay.setIcon(new ImageIcon(getClass().getResource("/icon/stopmusic.png")));
+        btnPlay.setIcon(new ImageIcon(getClass().getResource("/icon/pause48.png")));
 
         try {
             BufferedImage originalImage = ImageIO.read(getClass().getResource(selectedBaiHat.getAnh()));
@@ -181,6 +184,7 @@ public class Main extends javax.swing.JFrame {
         play(file);
     }
 
+//    tạo ảnh bo tròn 4 góc và có border
     private BufferedImage createRoundedImage(BufferedImage originalImage, int width, int height) {
         BufferedImage roundedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 
@@ -226,24 +230,70 @@ public class Main extends javax.swing.JFrame {
         }
     }
 
+    public void playAgain() {
+        try {
+            if (player != null) {
+                isPlaying = false; // Dừng phát nhạc
+                player.close(); // Giải phóng tài nguyên
+            }
+
+            fis = new FileInputStream(manager.getSelectedBaiHat().getAmThanh());
+            bis = new BufferedInputStream(fis);
+            player = new Player(bis);
+            totalLength = fis.available();
+            isPlaying = true; // Bắt đầu phát nhạc
+
+            new Thread() {
+                public void run() {
+                    try {
+                        player.play();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }.start();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public void pause() {
         try {
             if (player != null) {
                 if (isPaused) {
                     // Nếu đang tạm ngừng, thì tiếp tục phát nhạc từ vị trí đã tạm ngưng
-//                    File file = new File(manager.getSelectedBaiHat().getAmThanh());
-//                    player = new Player(new FileInputStream(file));              // Thay đổi đường dẫn tương ứng
-                    lbPlay.setIcon(new ImageIcon(getClass().getResource("/icon/stopmusic.png")));
-                    player.play((int) pausePosition);
-                    System.out.println(isPaused + "       1");
-                    System.out.println("Pausing playback at position: " + pausePosition);
+                    try {
+                        File file = new File(manager.getSelectedBaiHat().getAmThanh());
+
+                        fis = new FileInputStream(file);
+                        bis = new BufferedInputStream(fis);
+                        player = new Player(bis);
+
+                        fis.skip(totalLength - pause);
+
+                        new Thread() {
+                            public void run() {
+                                try {
+                                    player.play();
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }.start();
+                        btnPlay.setIcon(new ImageIcon(getClass().getResource("/icon/pause48.png")));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
                 } else {
                     // Nếu đang phát, thì tạm ngừng và lưu vị trí tạm ngưng
-                    lbPlay.setIcon(new ImageIcon(getClass().getResource("/icon/playmusic.png")));
-                    pausePosition = player.getPosition();
-                    player.close();
-                    System.out.println(isPaused + "       2");
-                    System.out.println("Pausing playback at position: " + pausePosition);
+                    try {
+                        pause = fis.available();
+                        player.close();
+                        btnPlay.setIcon(new ImageIcon(getClass().getResource("/icon/play48.png")));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
                 isPaused = !isPaused;
             }
@@ -270,21 +320,19 @@ public class Main extends javax.swing.JFrame {
         menu1 = new Menu.Menu();
         jSeparator2 = new javax.swing.JSeparator();
         jPanel1 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
         button1 = new swing.Button();
-        jLabel2 = new javax.swing.JLabel();
         lbTimeEnd = new javax.swing.JLabel();
         slider1 = new swing.Slider();
         jLabel3 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
-        lbPlay = new javax.swing.JLabel();
-        jLabel8 = new javax.swing.JLabel();
-        jLabel9 = new javax.swing.JLabel();
         panelBorder1 = new swing.PanelBorder();
         lbName = new javax.swing.JLabel();
         lbName2 = new javax.swing.JLabel();
         lbanh = new javax.swing.JLabel();
+        button2 = new swing.Button();
+        button3 = new swing.Button();
+        button4 = new swing.Button();
+        button5 = new swing.Button();
+        btnPlay = new swing.Button();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(204, 255, 255));
@@ -411,60 +459,39 @@ public class Main extends javax.swing.JFrame {
         jSeparator2.setOpaque(true);
 
         jPanel1.setOpaque(false);
-
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/speaker.png"))); // NOI18N
-        jLabel1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         button1.setBackground(new java.awt.Color(38, 46, 57));
         button1.setBorder(null);
         button1.setForeground(new java.awt.Color(204, 204, 204));
         button1.setText("Danh Sách Phát");
         button1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-
-        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/love_bot.png"))); // NOI18N
-        jLabel2.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jPanel1.add(button1, new org.netbeans.lib.awtextra.AbsoluteConstraints(71, 537, 154, 41));
 
         lbTimeEnd.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
         lbTimeEnd.setForeground(new java.awt.Color(255, 255, 255));
         lbTimeEnd.setText("03:21");
+        jPanel1.add(lbTimeEnd, new org.netbeans.lib.awtextra.AbsoluteConstraints(265, 596, -1, 31));
+        jPanel1.add(slider1, new org.netbeans.lib.awtextra.AbsoluteConstraints(43, 596, 210, 30));
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setText("00:00");
-
-        jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/play.png"))); // NOI18N
-        jLabel5.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-
-        jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/back.png"))); // NOI18N
-        jLabel6.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-
-        lbPlay.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lbPlay.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/playmusic.png"))); // NOI18N
-        lbPlay.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        lbPlay.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                lbPlayMouseClicked(evt);
-            }
-        });
-
-        jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/next.png"))); // NOI18N
-        jLabel8.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-
-        jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/repeat.png"))); // NOI18N
-        jLabel9.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 596, -1, 30));
 
         panelBorder1.setBackground(new java.awt.Color(38, 46, 57));
 
-        lbName.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lbName.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         lbName.setForeground(new java.awt.Color(255, 255, 255));
         lbName.setText("Lạc Trôi");
+        lbName.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
         lbName2.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
         lbName2.setForeground(new java.awt.Color(204, 204, 204));
         lbName2.setText("Sơn Tùng M-TP");
+        lbName2.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+
+        lbanh.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
         javax.swing.GroupLayout panelBorder1Layout = new javax.swing.GroupLayout(panelBorder1);
         panelBorder1.setLayout(panelBorder1Layout);
@@ -475,8 +502,8 @@ public class Main extends javax.swing.JFrame {
                 .addGroup(panelBorder1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(lbName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lbName2, javax.swing.GroupLayout.DEFAULT_SIZE, 255, Short.MAX_VALUE)
-                    .addComponent(lbanh, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(21, Short.MAX_VALUE))
+                    .addComponent(lbanh, javax.swing.GroupLayout.DEFAULT_SIZE, 255, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         panelBorder1Layout.setVerticalGroup(
             panelBorder1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -487,70 +514,40 @@ public class Main extends javax.swing.JFrame {
                 .addComponent(lbName)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lbName2)
-                .addContainerGap(16, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addGap(51, 51, 51)
-                        .addComponent(button1, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(51, 51, 51)
-                        .addComponent(jLabel2))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel3)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel5)
-                                .addGap(11, 11, 11)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(slider1, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(lbTimeEnd))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(20, 20, 20)
-                                .addComponent(jLabel6)
-                                .addGap(37, 37, 37)
-                                .addComponent(lbPlay, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(37, 37, 37)
-                                .addComponent(jLabel8)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel9)))))
-                .addGap(0, 0, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(panelBorder1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(panelBorder1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 197, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(button1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(slider1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbTimeEnd, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbPlay, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
-        );
+        jPanel1.add(panelBorder1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
+
+        button2.setBackground(new java.awt.Color(29, 38, 49));
+        button2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/play.png"))); // NOI18N
+        jPanel1.add(button2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 639, 40, 40));
+
+        button3.setBackground(new java.awt.Color(29, 38, 49));
+        button3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/repeat.png"))); // NOI18N
+        button3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                button3ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(button3, new org.netbeans.lib.awtextra.AbsoluteConstraints(256, 639, 40, 40));
+
+        button4.setBackground(new java.awt.Color(29, 38, 49));
+        button4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/back.png"))); // NOI18N
+        jPanel1.add(button4, new org.netbeans.lib.awtextra.AbsoluteConstraints(58, 639, 40, 40));
+
+        button5.setBackground(new java.awt.Color(29, 38, 49));
+        button5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/next.png"))); // NOI18N
+        jPanel1.add(button5, new org.netbeans.lib.awtextra.AbsoluteConstraints(198, 639, 40, 40));
+
+        btnPlay.setBackground(new java.awt.Color(29, 38, 49));
+        btnPlay.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/icons8-play-48.png"))); // NOI18N
+        btnPlay.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPlayActionPerformed(evt);
+            }
+        });
+        jPanel1.add(btnPlay, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 630, 60, -1));
 
         javax.swing.GroupLayout panel1Layout = new javax.swing.GroupLayout(panel1);
         panel1.setLayout(panel1Layout);
@@ -578,7 +575,7 @@ public class Main extends javax.swing.JFrame {
                         .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(content, javax.swing.GroupLayout.PREFERRED_SIZE, 705, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 795, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 696, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(0, 0, Short.MAX_VALUE))
         );
@@ -625,9 +622,13 @@ public class Main extends javax.swing.JFrame {
         setLocation(evt.getXOnScreen() - x, evt.getYOnScreen() - y);
     }//GEN-LAST:event_moveMouseDragged
 
-    private void lbPlayMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbPlayMouseClicked
-        pause();
-    }//GEN-LAST:event_lbPlayMouseClicked
+    private void btnPlayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPlayActionPerformed
+     pause();
+    }//GEN-LAST:event_btnPlayActionPerformed
+
+    private void button3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_button3ActionPerformed
+       playAgain();
+    }//GEN-LAST:event_button3ActionPerformed
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -672,16 +673,15 @@ public class Main extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private component.Account account1;
     private javax.swing.JPanel body;
+    private swing.Button btnPlay;
     private swing.Button button1;
+    private swing.Button button2;
+    private swing.Button button3;
+    private swing.Button button4;
+    private swing.Button button5;
     private javax.swing.JScrollPane content;
     private form.FormTrangChu formTrangChu1;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JSeparator jSeparator1;
@@ -690,7 +690,6 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JLabel lbName;
     private javax.swing.JLabel lbName2;
     private javax.swing.JLabel lbOut;
-    private javax.swing.JLabel lbPlay;
     private javax.swing.JLabel lbTimeEnd;
     private javax.swing.JLabel lbTitle;
     private javax.swing.JLabel lbanh;

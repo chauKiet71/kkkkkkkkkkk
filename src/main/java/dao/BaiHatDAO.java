@@ -1,4 +1,3 @@
-
 package dao;
 
 import entity.BaiHatEntity;
@@ -8,15 +7,10 @@ import java.util.List;
 import javax.swing.ImageIcon;
 import utils.XJdbcc;
 
-
 public class BaiHatDAO {
-     String sql_insert = "insert into NhanVien(MaNV, MatKhau, HoTen, Email, VaiTro) values (?,?,?,?,?)";
-    String sql_update = "update NhanVien set MatKhau = ?, HoTen = ?, Email = ?, VaiTro = ? where MaNV = ?";
-    String sql_delete = "Delete from NhanVien where MaNV = ?";
+
     String sql_selectAll = "Select * from BaiHat";
     String sql_selectById = "Select * from BaiHat where MaBh = ?";
-    String sql_selectByMatKhau = "Select * from NhanVien where MatKhau = ?";
-    String sql_selectByEmail = "Select * from NhanVien where Email = ?";
 
     public List<BaiHatEntity> selectAll() {
         return this.selectBySql(sql_selectAll);
@@ -48,7 +42,7 @@ public class BaiHatDAO {
                 entity.setSoLuotThich(rs.getInt(9));
                 entity.setSoluotNghe(rs.getInt(10));
                 entity.setMaTheLoai(rs.getString(11));
-     
+
                 list.add(entity);
 
             }

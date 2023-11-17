@@ -3,34 +3,48 @@ package component2;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
+import java.awt.Dimension;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 import model.Model_Chill;
 
 public class ItemChill extends javax.swing.JPanel {
-
+    
     public Model_Chill getData() {
         return data;
     }
-
+    
     private final Model_Chill data;
-
+    
     public ItemChill(Model_Chill data) {
         this.data = data;
         initComponents();
+        setLabel(lbMota);
         setOpaque(false);
         lbMota.setText(data.getTitle());
         if (data.getImage() != null) {
             roundedImage.setImage(data.getImage());
         }
     }
+    
+    public void setLabel(JLabel label) {
+        label.setPreferredSize(new Dimension(210, 60)); // Kích thước chiều ngang cố định
+        label.setHorizontalAlignment(SwingConstants.LEFT); // Canh lề trái
 
+        // Set dấu "..." nếu vượt quá chiều ngang và 2 dòng
+        label.setVerticalTextPosition(SwingConstants.TOP);
+        label.setVerticalAlignment(SwingConstants.TOP);
+        label.setMaximumSize(new Dimension(210, 60));
+    }
+    
     private static void setHandCursor(Component component) {
         Cursor handCursor = new Cursor(Cursor.HAND_CURSOR);
         component.setCursor(handCursor);
     }
-
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -38,7 +52,7 @@ public class ItemChill extends javax.swing.JPanel {
         roundedImage = new swing.RoundedImage();
         lbMota = new javax.swing.JLabel();
 
-        lbMota.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lbMota.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         lbMota.setForeground(new java.awt.Color(255, 255, 255));
         lbMota.setText("Chill");
 
