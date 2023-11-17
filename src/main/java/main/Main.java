@@ -14,28 +14,46 @@ import TimKiem.FormTimKiem;
 import TimKiem.TimKiem_TatCa;
 import entity.BaiHatEntity;
 import entity.BaiHatStateManager;
-import form.FormTimKiemItem;
 import form.FormTrangChu;
 import form.Form_ChuDe;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
-import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
-import javazoom.jl.decoder.JavaLayerException;
 import swing.ScrollBarr;
 import utils.EventManager;
 import javazoom.jl.player.Player;
+import org.jaudiotagger.audio.exceptions.CannotReadException;
+import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
+import org.jaudiotagger.tag.TagException;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JSlider;
+import javax.swing.Timer;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javazoom.jl.decoder.JavaLayerException;
+import org.jaudiotagger.audio.AudioFile;
+import org.jaudiotagger.audio.AudioFileIO;
+import org.jaudiotagger.audio.AudioHeader;
+import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
 
 public class Main extends javax.swing.JFrame {
 
@@ -43,7 +61,7 @@ public class Main extends javax.swing.JFrame {
     private long totalLength;
     private long pause;
     private FileInputStream fis;
-    private File myfile = null;
+//    private File myfile = null;
     private BufferedInputStream bis;
     private boolean isPaused;
 
@@ -114,12 +132,17 @@ public class Main extends javax.swing.JFrame {
         );
 
         init();
+        initMusic();
 
         EventManager.addListener(FormTrangChu.BAI_HAT_SELECTED_EVENT, (event, data) -> {
             if (data instanceof BaiHatEntity) {
                 BaiHatEntity selectedBaiHat = (BaiHatEntity) data;
                 manager.setSelectedBaiHat(selectedBaiHat);
-                fillMusic(selectedBaiHat);
+                try {
+                    fillMusic(selectedBaiHat);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
@@ -135,8 +158,18 @@ public class Main extends javax.swing.JFrame {
         content.setViewportView(scrollPane);
     }
 
-//    thêm ảnh và các thông tin mặc định cho from phát nhạc
     public void init() {
+        hoverBtn(btnPlay);
+        hoverBtn(btnDetails);
+        hoverBtn(btnPrev);
+        hoverBtn(btnNext);
+        hoverBtn(btnVolumn);
+        hoverBtn(btnTim);
+        hoverBtn(btnAgain);
+    }
+
+//    thêm ảnh và các thông tin mặc định cho from phát nhạc
+    public void initMusic() {
         try {
             BufferedImage originalImage = ImageIO.read(getClass().getResource("/icon/Music/MainMusic.jpg"));
 
@@ -156,11 +189,27 @@ public class Main extends javax.swing.JFrame {
         lbName2.setText("NhacCuaTao");
     }
 
+    public void hoverBtn(JButton btn) {
+        btn.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                setBackground(new Color(33, 42, 53));
+
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                setBackground(new Color(29, 38, 49));
+
+            }
+        });
+    }
+
 //    khi một bài hát trong bảng được chọn sẽ gửi sự kiện đến main và gọi hàm fillMusic để đặc các thông tin liên quan đến bài hát vào form phát nhạc và phát nhạc
-    public void fillMusic(BaiHatEntity selectedBaiHat) {
+    public void fillMusic(BaiHatEntity selectedBaiHat) throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
         lbName.setText(selectedBaiHat.getTenBh());
         lbName2.setText(selectedBaiHat.getCaSi());
-        lbTimeEnd.setText(selectedBaiHat.getThoiGian());
+        lbTime.setText(selectedBaiHat.getThoiGian());
         btnPlay.setIcon(new ImageIcon(getClass().getResource("/icon/pause48.png")));
 
         try {
@@ -182,6 +231,12 @@ public class Main extends javax.swing.JFrame {
         String fileString = selectedBaiHat.getAmThanh();
         File file = new File(fileString);
         play(file);
+        long durationSeconds = longMusic(file);
+        String time = formatDuration(durationSeconds);
+        lbTime.setText(time);
+        System.out.println("Độ dài của mp3:     " + durationSeconds);
+        System.out.println("totalLength của mp3:    " + totalLength);
+        setSlider(durationSeconds);
     }
 
 //    tạo ảnh bo tròn 4 góc và có border
@@ -230,7 +285,9 @@ public class Main extends javax.swing.JFrame {
         }
     }
 
+//    nghe lại nhạc một lần nữa
     public void playAgain() {
+        btnPlay.setIcon(new ImageIcon(getClass().getResource("/icon/pause48.png")));
         try {
             if (player != null) {
                 isPlaying = false; // Dừng phát nhạc
@@ -252,11 +309,16 @@ public class Main extends javax.swing.JFrame {
                     }
                 }
             }.start();
+            String fileString = manager.getSelectedBaiHat().getAmThanh();
+            File file = new File(fileString);
+            long durationSeconds = longMusic(file);
+            setSlider(durationSeconds);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+//    tạm dừng và phát tiếp nhạc
     public void pause() {
         try {
             if (player != null) {
@@ -264,7 +326,6 @@ public class Main extends javax.swing.JFrame {
                     // Nếu đang tạm ngừng, thì tiếp tục phát nhạc từ vị trí đã tạm ngưng
                     try {
                         File file = new File(manager.getSelectedBaiHat().getAmThanh());
-
                         fis = new FileInputStream(file);
                         bis = new BufferedInputStream(fis);
                         player = new Player(bis);
@@ -302,6 +363,73 @@ public class Main extends javax.swing.JFrame {
         }
     }
 
+//    lấy độ dài của file mp3 chuyển thành giây
+    public long longMusic(File mp3File) {
+        try {
+            AudioFile audioFile = AudioFileIO.read(mp3File);
+            AudioHeader audioHeader = audioFile.getAudioHeader();
+            int durationInSeconds = audioHeader.getTrackLength();
+            return durationInSeconds;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+//    lấy độ dài của file mp3 đã chuyển thành giây qua kiểu String mm:ss
+    private static String formatDuration(long durationInSeconds) {
+        long minutes = durationInSeconds / 60;
+        long seconds = durationInSeconds % 60;
+
+        // Format để hiển thị số phút và giây dưới dạng mm:ss
+        return String.format("%02d:%02d", minutes, seconds);
+    }
+
+    //set thanh Slider thay đổi theo độ dài của Mp3 theo giây
+    public void setSlider(long durationLong) {
+        int durationInt = (int) durationLong;
+        slider.setMinimum(0);
+        slider.setMaximum(durationInt);
+        slider.setValue(0);
+
+        int totalLengthInt = (int) totalLength;
+
+        int delay = totalLengthInt / durationInt;
+        JOptionPane.showMessageDialog(null, "total" + totalLength + "Delay" + delay);
+        Timer timer = new Timer(delay, new ActionListener() {
+            int currentValue = 0;
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                currentValue++;
+                slider.setValue(currentValue);
+
+                if (currentValue == durationInt) {
+                    ((Timer) e.getSource()).stop(); // Dừng timer khi slider đạt giá trị tối đa
+                    btnPlay.setIcon(new ImageIcon(getClass().getResource("/icon/play48.png")));
+                }
+            }
+        });
+
+        // Thiết lập sự kiện ChangeListener cho slider
+        slider.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                JSlider source = (JSlider) e.getSource();
+                if (!source.getValueIsAdjusting()) {
+                    int currentValue = source.getValue();
+
+                    // Thực hiện các hành động liên quan đến giá trị của slider (ví dụ: điều khiển phát nhạc)
+                    // ...
+                }
+            }
+        });
+
+        if (durationInt > 0) {
+            timer.start();
+        }
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -320,19 +448,21 @@ public class Main extends javax.swing.JFrame {
         menu1 = new Menu.Menu();
         jSeparator2 = new javax.swing.JSeparator();
         jPanel1 = new javax.swing.JPanel();
-        button1 = new swing.Button();
-        lbTimeEnd = new javax.swing.JLabel();
-        slider1 = new swing.Slider();
-        jLabel3 = new javax.swing.JLabel();
+        btnDanhSach = new swing.Button();
+        lbTime = new javax.swing.JLabel();
+        slider = new swing.Slider();
+        lbStart = new javax.swing.JLabel();
         panelBorder1 = new swing.PanelBorder();
         lbName = new javax.swing.JLabel();
         lbName2 = new javax.swing.JLabel();
         lbanh = new javax.swing.JLabel();
-        button2 = new swing.Button();
-        button3 = new swing.Button();
-        button4 = new swing.Button();
-        button5 = new swing.Button();
+        btnVolumn = new swing.Button();
+        btnAgain = new swing.Button();
+        btnPrev = new swing.Button();
+        btnNext = new swing.Button();
         btnPlay = new swing.Button();
+        btnDetails = new swing.Button();
+        btnTim = new swing.Button();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(204, 255, 255));
@@ -461,23 +591,23 @@ public class Main extends javax.swing.JFrame {
         jPanel1.setOpaque(false);
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        button1.setBackground(new java.awt.Color(38, 46, 57));
-        button1.setBorder(null);
-        button1.setForeground(new java.awt.Color(204, 204, 204));
-        button1.setText("Danh Sách Phát");
-        button1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jPanel1.add(button1, new org.netbeans.lib.awtextra.AbsoluteConstraints(71, 537, 154, 41));
+        btnDanhSach.setBackground(new java.awt.Color(38, 46, 57));
+        btnDanhSach.setBorder(null);
+        btnDanhSach.setForeground(new java.awt.Color(204, 204, 204));
+        btnDanhSach.setText("Danh Sách Phát");
+        btnDanhSach.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jPanel1.add(btnDanhSach, new org.netbeans.lib.awtextra.AbsoluteConstraints(71, 537, 154, 41));
 
-        lbTimeEnd.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
-        lbTimeEnd.setForeground(new java.awt.Color(255, 255, 255));
-        lbTimeEnd.setText("03:21");
-        jPanel1.add(lbTimeEnd, new org.netbeans.lib.awtextra.AbsoluteConstraints(265, 596, -1, 31));
-        jPanel1.add(slider1, new org.netbeans.lib.awtextra.AbsoluteConstraints(43, 596, 210, 30));
+        lbTime.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
+        lbTime.setForeground(new java.awt.Color(255, 255, 255));
+        lbTime.setText("03:21");
+        jPanel1.add(lbTime, new org.netbeans.lib.awtextra.AbsoluteConstraints(265, 596, -1, 31));
+        jPanel1.add(slider, new org.netbeans.lib.awtextra.AbsoluteConstraints(43, 596, 210, 30));
 
-        jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
-        jLabel3.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel3.setText("00:00");
-        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 596, -1, 30));
+        lbStart.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
+        lbStart.setForeground(new java.awt.Color(255, 255, 255));
+        lbStart.setText("00:00");
+        jPanel1.add(lbStart, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 596, -1, 30));
 
         panelBorder1.setBackground(new java.awt.Color(38, 46, 57));
 
@@ -498,7 +628,7 @@ public class Main extends javax.swing.JFrame {
         panelBorder1Layout.setHorizontalGroup(
             panelBorder1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelBorder1Layout.createSequentialGroup()
-                .addGap(20, 20, 20)
+                .addGap(22, 22, 22)
                 .addGroup(panelBorder1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(lbName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lbName2, javax.swing.GroupLayout.DEFAULT_SIZE, 255, Short.MAX_VALUE)
@@ -517,37 +647,45 @@ public class Main extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jPanel1.add(panelBorder1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
+        jPanel1.add(panelBorder1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 300, -1));
 
-        button2.setBackground(new java.awt.Color(29, 38, 49));
-        button2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/play.png"))); // NOI18N
-        jPanel1.add(button2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 639, 40, 40));
+        btnVolumn.setBackground(new java.awt.Color(29, 38, 49));
+        btnVolumn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/speaker.png"))); // NOI18N
+        jPanel1.add(btnVolumn, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 540, 40, 40));
 
-        button3.setBackground(new java.awt.Color(29, 38, 49));
-        button3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/repeat.png"))); // NOI18N
-        button3.addActionListener(new java.awt.event.ActionListener() {
+        btnAgain.setBackground(new java.awt.Color(29, 38, 49));
+        btnAgain.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/repeat.png"))); // NOI18N
+        btnAgain.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                button3ActionPerformed(evt);
+                btnAgainActionPerformed(evt);
             }
         });
-        jPanel1.add(button3, new org.netbeans.lib.awtextra.AbsoluteConstraints(256, 639, 40, 40));
+        jPanel1.add(btnAgain, new org.netbeans.lib.awtextra.AbsoluteConstraints(256, 639, 40, 40));
 
-        button4.setBackground(new java.awt.Color(29, 38, 49));
-        button4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/back.png"))); // NOI18N
-        jPanel1.add(button4, new org.netbeans.lib.awtextra.AbsoluteConstraints(58, 639, 40, 40));
+        btnPrev.setBackground(new java.awt.Color(29, 38, 49));
+        btnPrev.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/back.png"))); // NOI18N
+        jPanel1.add(btnPrev, new org.netbeans.lib.awtextra.AbsoluteConstraints(58, 639, 40, 40));
 
-        button5.setBackground(new java.awt.Color(29, 38, 49));
-        button5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/next.png"))); // NOI18N
-        jPanel1.add(button5, new org.netbeans.lib.awtextra.AbsoluteConstraints(198, 639, 40, 40));
+        btnNext.setBackground(new java.awt.Color(29, 38, 49));
+        btnNext.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/next.png"))); // NOI18N
+        jPanel1.add(btnNext, new org.netbeans.lib.awtextra.AbsoluteConstraints(198, 639, 40, 40));
 
         btnPlay.setBackground(new java.awt.Color(29, 38, 49));
-        btnPlay.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/icons8-play-48.png"))); // NOI18N
+        btnPlay.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/play48.png"))); // NOI18N
         btnPlay.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnPlayActionPerformed(evt);
             }
         });
         jPanel1.add(btnPlay, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 630, 60, -1));
+
+        btnDetails.setBackground(new java.awt.Color(29, 38, 49));
+        btnDetails.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/play.png"))); // NOI18N
+        jPanel1.add(btnDetails, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 639, 40, 40));
+
+        btnTim.setBackground(new java.awt.Color(29, 38, 49));
+        btnTim.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/love_bot.png"))); // NOI18N
+        jPanel1.add(btnTim, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 540, 40, 40));
 
         javax.swing.GroupLayout panel1Layout = new javax.swing.GroupLayout(panel1);
         panel1.setLayout(panel1Layout);
@@ -623,12 +761,12 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_moveMouseDragged
 
     private void btnPlayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPlayActionPerformed
-     pause();
+        pause();
     }//GEN-LAST:event_btnPlayActionPerformed
 
-    private void button3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_button3ActionPerformed
-       playAgain();
-    }//GEN-LAST:event_button3ActionPerformed
+    private void btnAgainActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgainActionPerformed
+        playAgain();
+    }//GEN-LAST:event_btnAgainActionPerformed
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -673,15 +811,16 @@ public class Main extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private component.Account account1;
     private javax.swing.JPanel body;
+    private swing.Button btnAgain;
+    private swing.Button btnDanhSach;
+    private swing.Button btnDetails;
+    private swing.Button btnNext;
     private swing.Button btnPlay;
-    private swing.Button button1;
-    private swing.Button button2;
-    private swing.Button button3;
-    private swing.Button button4;
-    private swing.Button button5;
+    private swing.Button btnPrev;
+    private swing.Button btnTim;
+    private swing.Button btnVolumn;
     private javax.swing.JScrollPane content;
     private form.FormTrangChu formTrangChu1;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JSeparator jSeparator1;
@@ -690,13 +829,14 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JLabel lbName;
     private javax.swing.JLabel lbName2;
     private javax.swing.JLabel lbOut;
-    private javax.swing.JLabel lbTimeEnd;
+    private javax.swing.JLabel lbStart;
+    private javax.swing.JLabel lbTime;
     private javax.swing.JLabel lbTitle;
     private javax.swing.JLabel lbanh;
     private Menu.Menu menu1;
     private component.header move;
     private swing.Panel panel1;
     private swing.PanelBorder panelBorder1;
-    private swing.Slider slider1;
+    private swing.Slider slider;
     // End of variables declaration//GEN-END:variables
 }
