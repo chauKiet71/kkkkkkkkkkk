@@ -477,18 +477,6 @@ public class Main extends javax.swing.JFrame {
 
                 timer.start();
 
-                //                    player.close();
-//                    File file = new File(manager.getSelectedBaiHat().getAmThanh());
-//                    fis = new FileInputStream(file);
-//                    bis = new BufferedInputStream(fis);
-//                    player = new Player(bis);
-//                    long bitrate = 128; // Tỷ lệ bit (bitrate) của file âm thanh (vd: 128kbps)
-//                    long bytes = (bitrate * value * 1000) / 8;
-//                    fis.skip(totalLength - bytes);
-//                    
-//                    System.out.println("TotalLength là:    " + totalLength);
-//                    System.out.println("bytes là:    " + bytes);
-//                    System.out.println("Vị trí bắt đầu phát:    " + (totalLength - bytes));
                 try {
 
                     player.close();
