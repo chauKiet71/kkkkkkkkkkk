@@ -424,6 +424,8 @@ public class Main extends javax.swing.JFrame {
         return String.format("%02d:%02d", minutes, seconds);
     }
 
+    private int currentValue;
+
     //set thanh Slider thay đổi theo độ dài của Mp3 theo giây
     public void setSlider(long durationLong) {
         // Tạm thời dừng timer nếu đang chạy
@@ -436,9 +438,8 @@ public class Main extends javax.swing.JFrame {
         slider.setMaximum(durationInt);
         slider.setValue(0);
 
-        Timer timer = new Timer(1000, new ActionListener() {
-            int currentValue = 0;
-
+        ActionListener timerActionListener = new ActionListener() {
+//            int currentValue = 0;
             @Override
             public void actionPerformed(ActionEvent e) {
                 currentValue++;
@@ -447,11 +448,14 @@ public class Main extends javax.swing.JFrame {
                 lbStart.setText(start);
 
                 if (currentValue == durationInt) {
-                    ((Timer) e.getSource()).stop(); // Dừng timer khi slider đạt giá trị tối đa
+                    timer.stop(); // Dừng timer khi slider đạt giá trị tối đa
                     btnPlay.setIcon(new ImageIcon(getClass().getResource("/icon/play48.png")));
                 }
             }
-        });
+        };
+
+        timer = new Timer(1000, timerActionListener);
+        currentValue = 0; // Khởi tạo currentValue
 
         slider.addMouseListener(new MouseAdapter() {
             @Override
@@ -459,36 +463,46 @@ public class Main extends javax.swing.JFrame {
                 JSlider source = (JSlider) e.getSource();
                 int value = source.getValue();
 
-                // Cập nhật giá trị của slider và thời gian hiện tại
-                slider.setValue(value);
-                String start = formatDuration(value);
-                lbStart.setText(start);
-
-                // Dừng timer và cài đặt lại các tham số
+                // Cập nhật giá trị của currentValue, slider và lbStart
                 timer.stop();
                 timer.setInitialDelay(0);
                 timer.setDelay(1000);
                 timer.setRepeats(true);
                 timer.setCoalesce(true);
-                timer.setInitialDelay(0);
 
-                // Cập nhật giá trị currentValue và khởi động lại timer
-                ((Timer) e.getSource()).restart(); // Sử dụng restart để cập nhật thời gian
                 currentValue = value;
+                slider.setValue(value);
+                String start = formatDuration(value);
+                lbStart.setText(start);
 
+                timer.start();
+
+                //                    player.close();
+//                    File file = new File(manager.getSelectedBaiHat().getAmThanh());
+//                    fis = new FileInputStream(file);
+//                    bis = new BufferedInputStream(fis);
+//                    player = new Player(bis);
+//                    long bitrate = 128; // Tỷ lệ bit (bitrate) của file âm thanh (vd: 128kbps)
+//                    long bytes = (bitrate * value * 1000) / 8;
+//                    fis.skip(totalLength - bytes);
+//                    
+//                    System.out.println("TotalLength là:    " + totalLength);
+//                    System.out.println("bytes là:    " + bytes);
+//                    System.out.println("Vị trí bắt đầu phát:    " + (totalLength - bytes));
                 try {
-//                    long microseconds = value * 1_000_000L;
-//                    System.out.println(microseconds);
+
                     player.close();
                     File file = new File(manager.getSelectedBaiHat().getAmThanh());
+                    AudioFile audioFile = AudioFileIO.read(file);
                     fis = new FileInputStream(file);
                     bis = new BufferedInputStream(fis);
                     player = new Player(bis);
-                    long bitrate = 128; // Tỷ lệ bit (bitrate) của file âm thanh (vd: 128kbps)
-                    long bytes = (bitrate * value * 1000) / 8;
-                    System.out.println(bytes);
-                    fis.skip(totalLength - bytes);
-                    System.out.println(totalLength - bytes);
+
+                    int sliderMax = slider.getMaximum();
+                    long duration = audioFile.getAudioHeader().getTrackLength();
+                    long position = (duration * value) / sliderMax;
+
+                    fis.skip(position * (file.length() / duration));
 
                     new Thread() {
                         public void run() {
@@ -499,6 +513,7 @@ public class Main extends javax.swing.JFrame {
                             }
                         }
                     }.start();
+                    btnPlay.setIcon(new ImageIcon(getClass().getResource("/icon/pause48.png")));
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
@@ -506,8 +521,7 @@ public class Main extends javax.swing.JFrame {
         });
 
         // Lưu lại timer để có thể dừng nó khi cần thiết
-        this.timer = timer;
-
+//        this.timer = timer;
         if (durationInt > 0) {
             timer.start();
         }
