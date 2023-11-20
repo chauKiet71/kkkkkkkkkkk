@@ -3,7 +3,6 @@ package main;
 import KhamPha_BaiHat.BaiHat;
 import KhamPha_NgheSi.NgheSi;
 import KhamPha_PlayList.PlayList;
-import dao.Playlist;
 import Menu.MenuEvent;
 import NgheGiHomNay.Top100;
 import NgheGiHomNay.TuyenTap;
@@ -14,7 +13,6 @@ import NhacCuaToi.TaoPlaylist;
 import TimKiem.FormTimKiem;
 import static TimKiem.FormTimKiem.BAI_HAT_SEARCHED;
 import TimKiem.TimKiem_TatCa;
-import dao.BaiHatDAO;
 import entity.BaiHatEntity;
 import form.FormTimKiemItem;
 import saveEvent.BaiHatStateManager;
@@ -47,45 +45,40 @@ import org.jaudiotagger.tag.TagException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JLabel;
 import javax.swing.JSlider;
 import javax.swing.Timer;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javazoom.jl.decoder.JavaLayerException;
+import javazoom.jl.player.advanced.AdvancedPlayer;
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.audio.AudioHeader;
 import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
 import saveEvent.SearchStateManager;
 
-public class Main extends javax.swing.JFrame {
+public class Main2 extends javax.swing.JFrame {
 
-    private Player player;
+    private String filePath;
+    private AdvancedPlayer player;
+    private Thread playerThread;
     private long totalLength;
     private long pause;
     private FileInputStream fis;
-//    private File myfile = null;
     private BufferedInputStream bis;
-    private Timer timer;
 
     private boolean isPlaying = false;
     private boolean isPaused;
-    private boolean isTim = false;
     int i = 0;
-
-    private Playlist playlist = new Playlist();
-
     public TimKiem_TatCa songpanel;
 
     BaiHatStateManager manager = new BaiHatStateManager();
     SearchStateManager searched = new SearchStateManager();
-    BaiHatDAO bhDao = new BaiHatDAO();
 
-    public Main() {
+    public Main2() {
         initComponents();
         content.setVerticalScrollBar(new ScrollBarr());
         menu1.setEvent(new MenuEvent() {
@@ -153,7 +146,6 @@ public class Main extends javax.swing.JFrame {
             if (data instanceof BaiHatEntity) {
                 BaiHatEntity selectedBaiHat = (BaiHatEntity) data;
                 manager.setSelectedBaiHat(selectedBaiHat);
-                playlist.addSong(selectedBaiHat);
                 try {
                     fillMusic(selectedBaiHat);
                 } catch (Exception e) {
@@ -162,8 +154,14 @@ public class Main extends javax.swing.JFrame {
             }
         });
 
-        playlist.printSongs();
-
+        EventManager.addListener(FormTimKiem.BAI_HAT_SEARCHED, (event, data) -> {
+            if (data instanceof BaiHatEntity) {
+                BaiHatEntity searchedBaiHat = (BaiHatEntity) data;
+                searched.setSelectedBaiHat(searchedBaiHat);
+                FormTimKiemItem newForm = new FormTimKiemItem();
+                setPanel(newForm);
+            }
+        });
     }
 
 //    thêm các Jpanel Form vào Main chính
@@ -227,37 +225,42 @@ public class Main extends javax.swing.JFrame {
 
 //    khi một bài hát trong bảng được chọn sẽ gửi sự kiện đến main và gọi hàm fillMusic để đặc các thông tin liên quan đến bài hát vào form phát nhạc và phát nhạc
     public void fillMusic(BaiHatEntity selectedBaiHat) throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
-        isPlaying = false;
+        i = 0;
         lbName.setText(selectedBaiHat.getTenBh());
         lbName2.setText(selectedBaiHat.getCaSi());
         lbTime.setText(selectedBaiHat.getThoiGian());
         btnPlay.setIcon(new ImageIcon(getClass().getResource("/icon/pause48.png")));
+        
+        setAnh(lbanh, selectedBaiHat.getAnh());
 
+        String fileString = selectedBaiHat.getAmThanh();
+        File file = new File(fileString);
+        play(file);
+        long durationSeconds = longMusic(file);
+        String time = formatDuration(durationSeconds);
+        lbTime.setText(time);
+//        System.out.println("Độ dài của mp3:     " + durationSeconds);
+//        System.out.println("totalLength của mp3:    " + totalLength);
+
+    }
+
+//    lấy đườn dẫn hình ảnh và điều chỉnh kích thước của Jlabel chứa ảnh, set hình vào Jlabel
+    private void setAnh(JLabel label, String link) {
         try {
-            BufferedImage originalImage = ImageIO.read(getClass().getResource(selectedBaiHat.getAnh()));
+            BufferedImage originalImage = ImageIO.read(getClass().getResource(link));
 
-            int width = lbanh.getWidth();
-            int height = lbanh.getHeight();
+            int width = label.getWidth();
+            int height = label.getHeight();
 
             // Tạo ảnh mới với đường viền bo góc và kích thước vừa với lbanh
             BufferedImage roundedImage = createRoundedImage(originalImage, width, height);
 
             // Tạo ImageIcon từ ảnh mới và thiết lập cho lbanh
             ImageIcon roundedImageIcon = new ImageIcon(roundedImage);
-            lbanh.setIcon(roundedImageIcon);
+            label.setIcon(roundedImageIcon);
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        String fileString = selectedBaiHat.getAmThanh();
-        File file = new File(fileString);
-
-        long durationSeconds = longMusic(file);
-        String time = formatDuration(durationSeconds);
-        lbTime.setText(time);
-
-        play(file);
-
     }
 
 //    tạo ảnh bo tròn 4 góc và có border
@@ -279,126 +282,56 @@ public class Main extends javax.swing.JFrame {
     }
 
 //    hàm play dùng để phát nhạc, đưa vào một đường dẫn tuyệt đối đến bài hát
-    private void play(File file) {
-        i = 0;
-        lbStart.setText("00:00");
+    public void play(File filePath) {
+        isPlaying = true;
         try {
-            if (player != null) {
-                isPlaying = false; // Dừng phát nhạc
-                player.close(); // Giải phóng tài nguyên
-            }
+            FileInputStream fis = new FileInputStream(filePath);
+            BufferedInputStream bis = new BufferedInputStream(fis);
+            player = new AdvancedPlayer(bis);
 
-            fis = new FileInputStream(file);
-            bis = new BufferedInputStream(fis);
-            player = new Player(bis);
-            totalLength = fis.available();
-            isPlaying = true; // Bắt đầu phát nhạc
-
-            new Thread() {
-                public void run() {
-                    try {
-                        player.play();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+            playerThread = new Thread(() -> {
+                try {
+                    player.play();
+                } catch (JavaLayerException e) {
+                    e.printStackTrace();
                 }
-            }.start();
-            long durationSeconds = longMusic(file);
-            setSlider(durationSeconds);
-        } catch (Exception e) {
+            });
+
+            playerThread.start();
+        } catch (FileNotFoundException | JavaLayerException e) {
             e.printStackTrace();
         }
     }
 
 //    nghe lại nhạc một lần nữa
-    public void playAgain() {
-        if (manager.getSelectedBaiHat() != null) {
-            i = 0;
-            lbStart.setText("00:00");
-            btnPlay.setIcon(new ImageIcon(getClass().getResource("/icon/pause48.png")));
-            try {
-                if (player != null) {
-                    isPlaying = false; // Dừng phát nhạc
-                    player.close(); // Giải phóng tài nguyên
+    public void pause() {
+        if (player != null) {
+            if (isPlaying) {
+                try {
+                    playerThread.suspend();
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
+            } else {
+                resume();
+            }
+        }
+    }
 
-                fis = new FileInputStream(manager.getSelectedBaiHat().getAmThanh());
-                bis = new BufferedInputStream(fis);
-                player = new Player(bis);
-                totalLength = fis.available();
-                isPlaying = true; // Bắt đầu phát nhạc
-
-                new Thread() {
-                    public void run() {
-                        try {
-                            player.play();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }.start();
-                String fileString = manager.getSelectedBaiHat().getAmThanh();
-                File file = new File(fileString);
-                long durationSeconds = longMusic(file);
-                setSlider(durationSeconds);
+    public void resume() {
+        if (player != null) {
+            try {
+                playerThread.resume();
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        } else {
-            return;
         }
-
     }
 
-    public void pause() {
-        try {
-            if (player != null) {
-                if (isPaused && i == 1) {
-                    // Nếu đang tạm ngừng, thì tiếp tục phát nhạc từ vị trí đã tạm ngưng
-                    try {
-                        timer.start();
-                        File file = new File(manager.getSelectedBaiHat().getAmThanh());
-                        fis = new FileInputStream(file);
-                        bis = new BufferedInputStream(fis);
-                        player = new Player(bis);
-                        if (pause > 0) {
-                            fis.skip(totalLength - pause);
-                        }
-
-                        new Thread() {
-                            public void run() {
-                                try {
-                                    player.play();
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        }.start();
-                        btnPlay.setIcon(new ImageIcon(getClass().getResource("/icon/pause48.png")));
-                        isPaused = false;
-                        i = 0;
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-                } else {
-                    // Nếu đang phát, thì tạm ngừng và lưu vị trí tạm ngưng
-                    try {
-                        i = 1;
-                        timer.stop();
-                        pause = fis.available();
-                        System.out.println(pause);
-                        player.close();
-                        btnPlay.setIcon(new ImageIcon(getClass().getResource("/icon/play48.png")));
-                        isPaused = true;
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+    public void stop() {
+        if (player != null) {
+            player.close();
+            playerThread.interrupt();
         }
     }
 
@@ -426,139 +359,50 @@ public class Main extends javax.swing.JFrame {
 
     //set thanh Slider thay đổi theo độ dài của Mp3 theo giây
     public void setSlider(long durationLong) {
-        // Tạm thời dừng timer nếu đang chạy
-        if (timer != null && timer.isRunning()) {
-            timer.stop();
-        }
+        if (i == 0) {
 
-        int durationInt = (int) durationLong;
-        slider.setMinimum(0);
-        slider.setMaximum(durationInt);
-        slider.setValue(0);
+            int durationInt = (int) durationLong;
+            slider.setMinimum(0);
+            slider.setMaximum(durationInt);
+            slider.setValue(0);
 
-        Timer timer = new Timer(1000, new ActionListener() {
-            int currentValue = 0;
+//        JOptionPane.showMessageDialog(null, "total" + totalLength + "Delay" + delay);
+            Timer timer = new Timer(1000, new ActionListener() {
+                int currentValue = 0;
 
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                currentValue++;
-                slider.setValue(currentValue);
-                String start = formatDuration(currentValue);
-                lbStart.setText(start);
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    currentValue++;
+                    slider.setValue(currentValue);
 
-                if (currentValue == durationInt) {
-                    ((Timer) e.getSource()).stop(); // Dừng timer khi slider đạt giá trị tối đa
-                    btnPlay.setIcon(new ImageIcon(getClass().getResource("/icon/play48.png")));
+                    String start = formatDuration(currentValue);
+                    lbStart.setText(start);
+
+                    if (currentValue == durationInt) {
+                        ((Timer) e.getSource()).stop(); // Dừng timer khi slider đạt giá trị tối đa
+                        btnPlay.setIcon(new ImageIcon(getClass().getResource("/icon/play48.png")));
+                    }
                 }
+            });
+
+            // Thiết lập sự kiện ChangeListener cho slider
+            slider.addChangeListener(new ChangeListener() {
+                @Override
+                public void stateChanged(ChangeEvent e) {
+                    JSlider source = (JSlider) e.getSource();
+                    if (!source.getValueIsAdjusting()) {
+                        int currentValue = source.getValue();
+
+                        // Thực hiện các hành động liên quan đến giá trị của slider (ví dụ: điều khiển phát nhạc)
+                        // ...
+                    }
+                }
+            });
+
+            if (durationInt > 0) {
+                timer.start();
             }
-        });
 
-        slider.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseReleased(MouseEvent e) {
-                JSlider source = (JSlider) e.getSource();
-                int value = source.getValue();
-
-                // Cập nhật giá trị của slider và thời gian hiện tại
-                slider.setValue(value);
-                String start = formatDuration(value);
-                lbStart.setText(start);
-
-                // Dừng timer và cài đặt lại các tham số
-                timer.stop();
-                timer.setInitialDelay(0);
-                timer.setDelay(1000);
-                timer.setRepeats(true);
-                timer.setCoalesce(true);
-                timer.setInitialDelay(0);
-
-                // Cập nhật giá trị currentValue và khởi động lại timer
-                ((Timer) e.getSource()).restart(); // Sử dụng restart để cập nhật thời gian
-                currentValue = value;
-
-                try {
-//                    long microseconds = value * 1_000_000L;
-//                    System.out.println(microseconds);
-                    player.close();
-                    File file = new File(manager.getSelectedBaiHat().getAmThanh());
-                    fis = new FileInputStream(file);
-                    bis = new BufferedInputStream(fis);
-                    player = new Player(bis);
-                    long bitrate = 128; // Tỷ lệ bit (bitrate) của file âm thanh (vd: 128kbps)
-                    long bytes = (bitrate * value * 1000) / 8;
-                    System.out.println(bytes);
-                    fis.skip(totalLength - bytes);
-                    System.out.println(totalLength - bytes);
-
-                    new Thread() {
-                        public void run() {
-                            try {
-                                player.play();
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }.start();
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-            }
-        });
-
-        // Lưu lại timer để có thể dừng nó khi cần thiết
-        this.timer = timer;
-
-        if (durationInt > 0) {
-            timer.start();
-        }
-    }
-
-    private void playPreviousSong() throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
-        playlist.playPrevious();
-        BaiHatEntity currentSong = playlist.getCurrentSong();
-        if (currentSong != null) {
-            fillMusic(currentSong);
-        }
-    }
-
-    private void playNextSong() throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
-        playlist.playNext();
-        BaiHatEntity currentSong = playlist.getCurrentSong();
-        if (currentSong != null) {
-            fillMusic(currentSong);
-        }
-    }
-
-    public BaiHatEntity getEntity1(int index) {
-        BaiHatEntity entity = new BaiHatEntity();
-        entity.setSoLuotThich(manager.getSelectedBaiHat().getSoLuotThich() + index);
-        entity.setMaBh(manager.getSelectedBaiHat().getMaBh());
-        return entity;
-    }
-
-    public void tim() {
-        if (manager.getSelectedBaiHat() != null) {
-            if (isTim == false) {
-                btnTim.setIcon(new ImageIcon(getClass().getResource("/icon/heart24.png")));
-                BaiHatEntity bhEntity = getEntity1(1);
-                try {
-                    bhDao.updateTim(bhEntity);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                isTim = true;
-            } else {
-                btnTim.setIcon(new ImageIcon(getClass().getResource("/icon/heart24null.png")));
-                BaiHatEntity bhEntity = getEntity1(-1);
-                try {
-                    bhDao.updateTim(bhEntity);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                isTim = false;
-            }
-        } else {
-            return;
         }
 
     }
@@ -783,7 +627,7 @@ public class Main extends javax.swing.JFrame {
         jPanel1.add(panelBorder1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 300, -1));
 
         btnVolumn.setBackground(new java.awt.Color(29, 38, 49));
-        btnVolumn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/volume24.png"))); // NOI18N
+        btnVolumn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/speaker.png"))); // NOI18N
         jPanel1.add(btnVolumn, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 540, 40, 40));
 
         btnAgain.setBackground(new java.awt.Color(29, 38, 49));
@@ -797,20 +641,10 @@ public class Main extends javax.swing.JFrame {
 
         btnPrev.setBackground(new java.awt.Color(29, 38, 49));
         btnPrev.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/back.png"))); // NOI18N
-        btnPrev.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnPrevActionPerformed(evt);
-            }
-        });
         jPanel1.add(btnPrev, new org.netbeans.lib.awtextra.AbsoluteConstraints(58, 639, 40, 40));
 
         btnNext.setBackground(new java.awt.Color(29, 38, 49));
         btnNext.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/next.png"))); // NOI18N
-        btnNext.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnNextActionPerformed(evt);
-            }
-        });
         jPanel1.add(btnNext, new org.netbeans.lib.awtextra.AbsoluteConstraints(198, 639, 40, 40));
 
         btnPlay.setBackground(new java.awt.Color(29, 38, 49));
@@ -827,12 +661,7 @@ public class Main extends javax.swing.JFrame {
         jPanel1.add(btnDetails, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 639, 40, 40));
 
         btnTim.setBackground(new java.awt.Color(29, 38, 49));
-        btnTim.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/heart24null.png"))); // NOI18N
-        btnTim.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnTimActionPerformed(evt);
-            }
-        });
+        btnTim.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/love_bot.png"))); // NOI18N
         jPanel1.add(btnTim, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 540, 40, 40));
 
         javax.swing.GroupLayout panel1Layout = new javax.swing.GroupLayout(panel1);
@@ -915,45 +744,8 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_btnPlayActionPerformed
 
     private void btnAgainActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgainActionPerformed
-        playAgain();
+
     }//GEN-LAST:event_btnAgainActionPerformed
-
-    private void btnPrevActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrevActionPerformed
-        try {
-            playPreviousSong();
-        } catch (CannotReadException ex) {
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (TagException ex) {
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ReadOnlyFileException ex) {
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InvalidAudioFrameException ex) {
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-    }//GEN-LAST:event_btnPrevActionPerformed
-
-    private void btnNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNextActionPerformed
-        try {
-            playNextSong();
-        } catch (CannotReadException ex) {
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (TagException ex) {
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ReadOnlyFileException ex) {
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InvalidAudioFrameException ex) {
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }//GEN-LAST:event_btnNextActionPerformed
-
-    private void btnTimActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTimActionPerformed
-        tim();
-    }//GEN-LAST:event_btnTimActionPerformed
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -970,27 +762,28 @@ public class Main extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Main.class
+            java.util.logging.Logger.getLogger(Main2.class
                     .getName()).log(java.util.logging.Level.SEVERE, null, ex);
 
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Main.class
+            java.util.logging.Logger.getLogger(Main2.class
                     .getName()).log(java.util.logging.Level.SEVERE, null, ex);
 
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Main.class
+            java.util.logging.Logger.getLogger(Main2.class
                     .getName()).log(java.util.logging.Level.SEVERE, null, ex);
 
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Main.class
+            java.util.logging.Logger.getLogger(Main2.class
                     .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Main().setVisible(true);
+                new Main2().setVisible(true);
             }
         });
     }

@@ -9,9 +9,33 @@ import utils.XJdbcc;
 
 public class BaiHatDAO {
 
+    String view_update = "update BaiHat set SoLuotNghe = ? where MaBh = ?";
+    String tim_update = "update BaiHat set SoLuotThich = ? where MaBh = ?";
     String sql_selectAll = "Select * from BaiHat";
     String sql_selectById = "Select * from BaiHat where MaBh = ?";
-    String sql_selectByBaiHat = "Select * from BaiHat where tenBh like '%'+' ?'+'%'";
+    String sql_selectByBaiHat = "Select * from BaiHat where tenBh = ?";
+
+    public void updateView(BaiHatEntity entity) {
+        try {
+            XJdbcc.update(view_update,
+                    entity.getSoluotNghe(),
+                    entity.getMaBh()
+            );
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void updateTim(BaiHatEntity entity) {
+        try {
+            XJdbcc.update(tim_update,
+                    entity.getSoLuotThich(),
+                    entity.getMaBh()
+            );
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     public List<BaiHatEntity> selectAll() {
         return this.selectBySql(sql_selectAll);

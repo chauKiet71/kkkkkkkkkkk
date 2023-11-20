@@ -11,12 +11,12 @@ import model.Model_Chill;
  *
  * @author kle99
  */
-public class Playlist extends javax.swing.JPanel {
+public class Playlist_List extends javax.swing.JPanel {
 
     /**
      * Creates new form NewJPanel
      */
-    public Playlist() {
+    public Playlist_List() {
         initComponents();
         init();
     }

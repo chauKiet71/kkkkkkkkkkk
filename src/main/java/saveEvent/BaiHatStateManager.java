@@ -1,4 +1,6 @@
-package entity;
+package saveEvent;
+
+import entity.BaiHatEntity;
 
 public class BaiHatStateManager {
 
