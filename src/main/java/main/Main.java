@@ -12,10 +12,10 @@ import NhacCuaToi.DaTaiLen;
 import NhacCuaToi.NgheGanDay;
 import NhacCuaToi.TaoPlaylist;
 import TimKiem.FormTimKiem;
-import static TimKiem.FormTimKiem.BAI_HAT_SEARCHED;
 import TimKiem.TimKiem_TatCa;
 import dao.BaiHatDAO;
 import entity.BaiHatEntity;
+import form.FormDetailMusic;
 import form.FormTimKiemItem;
 import saveEvent.BaiHatStateManager;
 import form.FormTrangChu;
@@ -51,6 +51,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JLabel;
 import javax.swing.JSlider;
 import javax.swing.Timer;
 import javax.swing.event.ChangeEvent;
@@ -63,7 +64,7 @@ import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
 import saveEvent.SearchStateManager;
 
 public class Main extends javax.swing.JFrame {
-
+    
     private Player player;
     private long totalLength;
     private long pause;
@@ -71,20 +72,20 @@ public class Main extends javax.swing.JFrame {
 //    private File myfile = null;
     private BufferedInputStream bis;
     private Timer timer;
-
+    
     private boolean isPlaying = false;
     private boolean isPaused;
     private boolean isTim = false;
     int i = 0;
-
+    
     private Playlist playlist = new Playlist();
-
+    
     public TimKiem_TatCa songpanel;
-
+    
     BaiHatStateManager manager = new BaiHatStateManager();
     SearchStateManager searched = new SearchStateManager();
     BaiHatDAO bhDao = new BaiHatDAO();
-
+    
     public Main() {
         initComponents();
         content.setVerticalScrollBar(new ScrollBarr());
@@ -145,10 +146,10 @@ public class Main extends javax.swing.JFrame {
             }
         }
         );
-
+        
         init();
         initMusic();
-
+        
         EventManager.addListener(FormTrangChu.BAI_HAT_SELECTED_EVENT, (event, data) -> {
             if (data instanceof BaiHatEntity) {
                 BaiHatEntity selectedBaiHat = (BaiHatEntity) data;
@@ -161,9 +162,9 @@ public class Main extends javax.swing.JFrame {
                 }
             }
         });
-
+        
         playlist.printSongs();
-
+        
     }
 
 //    thêm các Jpanel Form vào Main chính
@@ -176,7 +177,7 @@ public class Main extends javax.swing.JFrame {
         scrollPane.setBorder(null);
         content.setViewportView(scrollPane);
     }
-
+    
     public void init() {
         hoverBtn(btnPlay);
         hoverBtn(btnDetails);
@@ -191,7 +192,7 @@ public class Main extends javax.swing.JFrame {
     public void initMusic() {
         try {
             BufferedImage originalImage = ImageIO.read(getClass().getResource("/icon/Music/MainMusic.jpg"));
-
+            
             int width = lbanh.getWidth();
             int height = lbanh.getHeight();
 
@@ -208,19 +209,19 @@ public class Main extends javax.swing.JFrame {
         lbName2.setText("NhacCuaTao");
         lbTime.setText("00:00");
     }
-
+    
     public void hoverBtn(JButton btn) {
         btn.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
                 setBackground(new Color(33, 42, 53));
-
+                
             }
-
+            
             @Override
             public void mouseExited(MouseEvent e) {
                 setBackground(new Color(29, 38, 49));
-
+                
             }
         });
     }
@@ -232,10 +233,10 @@ public class Main extends javax.swing.JFrame {
         lbName2.setText(selectedBaiHat.getCaSi());
         lbTime.setText(selectedBaiHat.getThoiGian());
         btnPlay.setIcon(new ImageIcon(getClass().getResource("/icon/pause48.png")));
-
+        
         try {
             BufferedImage originalImage = ImageIO.read(getClass().getResource(selectedBaiHat.getAnh()));
-
+            
             int width = lbanh.getWidth();
             int height = lbanh.getHeight();
 
@@ -248,33 +249,33 @@ public class Main extends javax.swing.JFrame {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        
         String fileString = selectedBaiHat.getAmThanh();
         File file = new File(fileString);
-
+        
         long durationSeconds = longMusic(file);
         String time = formatDuration(durationSeconds);
         lbTime.setText(time);
-
+        
         play(file);
-
+        
     }
 
 //    tạo ảnh bo tròn 4 góc và có border
     private BufferedImage createRoundedImage(BufferedImage originalImage, int width, int height) {
         BufferedImage roundedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-
+        
         Graphics2D g2 = roundedImage.createGraphics();
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2.setClip(new RoundRectangle2D.Float(0, 0, width, height, 20, 20)); // Điều chỉnh bán kính bo góc ở đây
         g2.drawImage(originalImage, 0, 0, width, height, null);
-
+        
         g2.setColor(new Color(38, 46, 57)); // Màu sắc của đường viền
         g2.setStroke(new BasicStroke(1)); // Độ đậm của đường viền
         g2.drawRoundRect(0, 0, width, height, 20, 20); // Vẽ đường viền
 
         g2.dispose();
-
+        
         return roundedImage;
     }
 
@@ -287,7 +288,7 @@ public class Main extends javax.swing.JFrame {
                 isPlaying = false; // Dừng phát nhạc
                 player.close(); // Giải phóng tài nguyên
             }
-
+            
             fis = new FileInputStream(file);
             bis = new BufferedInputStream(fis);
             player = new Player(bis);
@@ -321,7 +322,7 @@ public class Main extends javax.swing.JFrame {
                     isPlaying = false; // Dừng phát nhạc
                     player.close(); // Giải phóng tài nguyên
                 }
-
+                
                 fis = new FileInputStream(manager.getSelectedBaiHat().getAmThanh());
                 bis = new BufferedInputStream(fis);
                 player = new Player(bis);
@@ -347,9 +348,9 @@ public class Main extends javax.swing.JFrame {
         } else {
             return;
         }
-
+        
     }
-
+    
     public void pause() {
         try {
             if (player != null) {
@@ -364,7 +365,7 @@ public class Main extends javax.swing.JFrame {
                         if (pause > 0) {
                             fis.skip(totalLength - pause);
                         }
-
+                        
                         new Thread() {
                             public void run() {
                                 try {
@@ -380,7 +381,7 @@ public class Main extends javax.swing.JFrame {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-
+                    
                 } else {
                     // Nếu đang phát, thì tạm ngừng và lưu vị trí tạm ngưng
                     try {
@@ -395,7 +396,7 @@ public class Main extends javax.swing.JFrame {
                         e.printStackTrace();
                     }
                 }
-
+                
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -423,7 +424,7 @@ public class Main extends javax.swing.JFrame {
         // Format để hiển thị số phút và giây dưới dạng mm:ss
         return String.format("%02d:%02d", minutes, seconds);
     }
-
+    
     private int currentValue;
 
     //set thanh Slider thay đổi theo độ dài của Mp3 theo giây
@@ -432,12 +433,12 @@ public class Main extends javax.swing.JFrame {
         if (timer != null && timer.isRunning()) {
             timer.stop();
         }
-
+        
         int durationInt = (int) durationLong;
         slider.setMinimum(0);
         slider.setMaximum(durationInt);
         slider.setValue(0);
-
+        
         ActionListener timerActionListener = new ActionListener() {
 //            int currentValue = 0;
             @Override
@@ -446,14 +447,14 @@ public class Main extends javax.swing.JFrame {
                 slider.setValue(currentValue);
                 String start = formatDuration(currentValue);
                 lbStart.setText(start);
-
+                
                 if (currentValue == durationInt) {
                     timer.stop(); // Dừng timer khi slider đạt giá trị tối đa
                     btnPlay.setIcon(new ImageIcon(getClass().getResource("/icon/play48.png")));
                 }
             }
         };
-
+        
         timer = new Timer(1000, timerActionListener);
         currentValue = 0; // Khởi tạo currentValue
 
@@ -469,29 +470,29 @@ public class Main extends javax.swing.JFrame {
                 timer.setDelay(1000);
                 timer.setRepeats(true);
                 timer.setCoalesce(true);
-
+                
                 currentValue = value;
                 slider.setValue(value);
                 String start = formatDuration(value);
                 lbStart.setText(start);
-
+                
                 timer.start();
-
+                
                 try {
-
+                    
                     player.close();
                     File file = new File(manager.getSelectedBaiHat().getAmThanh());
                     AudioFile audioFile = AudioFileIO.read(file);
                     fis = new FileInputStream(file);
                     bis = new BufferedInputStream(fis);
                     player = new Player(bis);
-
+                    
                     int sliderMax = slider.getMaximum();
                     long duration = audioFile.getAudioHeader().getTrackLength();
                     long position = (duration * value) / sliderMax;
-
+                    
                     fis.skip(position * (file.length() / duration));
-
+                    
                     new Thread() {
                         public void run() {
                             try {
@@ -514,7 +515,7 @@ public class Main extends javax.swing.JFrame {
             timer.start();
         }
     }
-
+    
     private void playPreviousSong() throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
         playlist.playPrevious();
         BaiHatEntity currentSong = playlist.getCurrentSong();
@@ -522,7 +523,7 @@ public class Main extends javax.swing.JFrame {
             fillMusic(currentSong);
         }
     }
-
+    
     private void playNextSong() throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
         playlist.playNext();
         BaiHatEntity currentSong = playlist.getCurrentSong();
@@ -530,14 +531,14 @@ public class Main extends javax.swing.JFrame {
             fillMusic(currentSong);
         }
     }
-
+    
     public BaiHatEntity getEntity1(int index) {
         BaiHatEntity entity = new BaiHatEntity();
         entity.setSoLuotThich(manager.getSelectedBaiHat().getSoLuotThich() + index);
         entity.setMaBh(manager.getSelectedBaiHat().getMaBh());
         return entity;
     }
-
+    
     public void tim() {
         if (manager.getSelectedBaiHat() != null) {
             if (isTim == false) {
@@ -562,9 +563,9 @@ public class Main extends javax.swing.JFrame {
         } else {
             return;
         }
-
+        
     }
-
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -826,6 +827,11 @@ public class Main extends javax.swing.JFrame {
 
         btnDetails.setBackground(new java.awt.Color(29, 38, 49));
         btnDetails.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/play.png"))); // NOI18N
+        btnDetails.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDetailsActionPerformed(evt);
+            }
+        });
         jPanel1.add(btnDetails, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 639, 40, 40));
 
         btnTim.setBackground(new java.awt.Color(29, 38, 49));
@@ -957,6 +963,11 @@ public class Main extends javax.swing.JFrame {
         tim();
     }//GEN-LAST:event_btnTimActionPerformed
 
+    private void btnDetailsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDetailsActionPerformed
+        FormDetailMusic details = new FormDetailMusic();
+        setPanel(details);
+    }//GEN-LAST:event_btnDetailsActionPerformed
+    
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -968,21 +979,21 @@ public class Main extends javax.swing.JFrame {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
-
+                    
                 }
             }
         } catch (ClassNotFoundException ex) {
             java.util.logging.Logger.getLogger(Main.class
                     .getName()).log(java.util.logging.Level.SEVERE, null, ex);
-
+            
         } catch (InstantiationException ex) {
             java.util.logging.Logger.getLogger(Main.class
                     .getName()).log(java.util.logging.Level.SEVERE, null, ex);
-
+            
         } catch (IllegalAccessException ex) {
             java.util.logging.Logger.getLogger(Main.class
                     .getName()).log(java.util.logging.Level.SEVERE, null, ex);
-
+            
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(Main.class
                     .getName()).log(java.util.logging.Level.SEVERE, null, ex);

@@ -12,22 +12,17 @@ import Table.tableDAO;
 import dao.BaiHatDAO;
 import entity.BaiHatEntity;
 import saveEvent.BaiHatStateManager;
-//import static form.Form_TrangChu.BAI_HAT_SELECTED_EVENT;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.EventQueue;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.File;
 import java.util.List;
-import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
-import model.Model_Profile;
-import org.jaudiotagger.audio.AudioFile;
-import org.jaudiotagger.audio.AudioFileIO;
-import org.jaudiotagger.audio.AudioHeader;
+
+import saveEvent.MusicDetails;
 import utils.EventManager;
 
 public class FormTrangChu extends javax.swing.JPanel {
@@ -36,6 +31,7 @@ public class FormTrangChu extends javax.swing.JPanel {
     tableDAO tbdao = new tableDAO();
     BaiHatDAO bhDao = new BaiHatDAO();
     public static final String BAI_HAT_SELECTED_EVENT = "BAI_HAT_SELECTED_EVENT";
+    public static final String DETAILS_SELECTED_EVENT = "DETAILS_SELECTED_EVENT";
     private static BaiHatEntity bh;
 
     public FormTrangChu() {
@@ -103,9 +99,11 @@ public class FormTrangChu extends javax.swing.JPanel {
         }
 
         BaiHatStateManager.setSelectedBaiHat(bh);
+        MusicDetails.setSelectedBaiHat(bh);
 
         EventQueue.invokeLater(() -> {
             EventManager.fireEvent(BAI_HAT_SELECTED_EVENT, bh);
+            EventManager.fireEvent(DETAILS_SELECTED_EVENT, bh);
         });
     }
 

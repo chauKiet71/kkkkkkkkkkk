@@ -13,11 +13,12 @@ public class BaiHatEntity {
     private Integer soLuotThich;
     private Integer soluotNghe;
     private String maTheLoai;
+    private String moTa;
 
     public BaiHatEntity() {
     }
 
-    public BaiHatEntity(String maBh, String tenBh, String caSi, String nhacSi, String amThanh, String anh, String loiBh, String thoiGian, Integer soLuotThich, Integer soluotNghe, String maTheLoai) {
+    public BaiHatEntity(String maBh, String tenBh, String caSi, String nhacSi, String amThanh, String anh, String loiBh, String thoiGian, Integer soLuotThich, Integer soluotNghe, String maTheLoai, String moTa) {
         this.maBh = maBh;
         this.tenBh = tenBh;
         this.caSi = caSi;
@@ -29,6 +30,7 @@ public class BaiHatEntity {
         this.soLuotThich = soLuotThich;
         this.soluotNghe = soluotNghe;
         this.maTheLoai = maTheLoai;
+        this.moTa = moTa;
     }
 
     public String getMaBh() {
@@ -117,6 +119,14 @@ public class BaiHatEntity {
 
     public void setMaTheLoai(String maTheLoai) {
         this.maTheLoai = maTheLoai;
+    }
+
+    public String getMoTa() {
+        return moTa;
+    }
+
+    public void setMoTa(String moTa) {
+        this.moTa = moTa;
     }
 
 }

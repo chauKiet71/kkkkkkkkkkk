@@ -13,7 +13,7 @@ public class BaiHatDAO {
     String tim_update = "update BaiHat set SoLuotThich = ? where MaBh = ?";
     String sql_selectAll = "Select * from BaiHat";
     String sql_selectById = "Select * from BaiHat where MaBh = ?";
-    String sql_selectByBaiHat = "Select * from BaiHat where tenBh = ?";
+    String sql_selectByBaiHat = "Select * from BaiHat where tenBh like ?";
 
     public void updateView(BaiHatEntity entity) {
         try {
@@ -75,6 +75,7 @@ public class BaiHatDAO {
                 entity.setSoLuotThich(rs.getInt(9));
                 entity.setSoluotNghe(rs.getInt(10));
                 entity.setMaTheLoai(rs.getString(11));
+                entity.setMoTa(rs.getString(12));
 
                 list.add(entity);
 
