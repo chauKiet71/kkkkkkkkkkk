@@ -9,8 +9,33 @@ import utils.XJdbcc;
 
 public class BaiHatDAO {
 
+    String view_update = "update BaiHat set SoLuotNghe = ? where MaBh = ?";
+    String tim_update = "update BaiHat set SoLuotThich = ? where MaBh = ?";
     String sql_selectAll = "Select * from BaiHat";
     String sql_selectById = "Select * from BaiHat where MaBh = ?";
+    String sql_selectByBaiHat = "Select * from BaiHat where tenBh like ?";
+
+    public void updateView(BaiHatEntity entity) {
+        try {
+            XJdbcc.update(view_update,
+                    entity.getSoluotNghe(),
+                    entity.getMaBh()
+            );
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void updateTim(BaiHatEntity entity) {
+        try {
+            XJdbcc.update(tim_update,
+                    entity.getSoLuotThich(),
+                    entity.getMaBh()
+            );
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     public List<BaiHatEntity> selectAll() {
         return this.selectBySql(sql_selectAll);
@@ -18,6 +43,14 @@ public class BaiHatDAO {
 
     public BaiHatEntity selectById(String id) {
         List<BaiHatEntity> list = this.selectBySql(sql_selectById, id);
+        if (list.isEmpty()) {
+            return null;
+        }
+        return list.get(0);
+    }
+
+    public BaiHatEntity selectByNameMusic(String id) {
+        List<BaiHatEntity> list = this.selectBySql(sql_selectByBaiHat, id);
         if (list.isEmpty()) {
             return null;
         }
@@ -42,6 +75,7 @@ public class BaiHatDAO {
                 entity.setSoLuotThich(rs.getInt(9));
                 entity.setSoluotNghe(rs.getInt(10));
                 entity.setMaTheLoai(rs.getString(11));
+                entity.setMoTa(rs.getString(12));
 
                 list.add(entity);
 

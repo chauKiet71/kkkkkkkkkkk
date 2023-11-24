@@ -1,5 +1,6 @@
 package form;
 
+import dao.Playlist;
 import SlideShow.Slide1;
 import SlideShow.Slide2;
 import SlideShow.Slide3;
@@ -10,19 +11,18 @@ import Table.Model_Table;
 import Table.tableDAO;
 import dao.BaiHatDAO;
 import entity.BaiHatEntity;
-import entity.BaiHatStateManager;
-//import static form.Form_TrangChu.BAI_HAT_SELECTED_EVENT;
+import saveEvent.BaiHatStateManager;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.EventQueue;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
-import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
-import model.Model_Profile;
+
+import saveEvent.MusicDetails;
 import utils.EventManager;
 
 public class FormTrangChu extends javax.swing.JPanel {
@@ -31,6 +31,8 @@ public class FormTrangChu extends javax.swing.JPanel {
     tableDAO tbdao = new tableDAO();
     BaiHatDAO bhDao = new BaiHatDAO();
     public static final String BAI_HAT_SELECTED_EVENT = "BAI_HAT_SELECTED_EVENT";
+    public static final String DETAILS_SELECTED_EVENT = "DETAILS_SELECTED_EVENT";
+    private static BaiHatEntity bh;
 
     public FormTrangChu() {
         initComponents();
@@ -67,6 +69,7 @@ public class FormTrangChu extends javax.swing.JPanel {
         try {
             List<Model_Table> list = tbdao.selectAll();
             for (Model_Table bh : list) {
+
                 table1.addRow(new Model_Table(bh.getIcon(), bh.getName(), bh.getSing(), bh.getView(), bh.getTime(), bh.getMaBh()).toRowTable());
             }
         } catch (Exception e) {
@@ -74,16 +77,33 @@ public class FormTrangChu extends javax.swing.JPanel {
         }
     }
 
+    public BaiHatEntity getEntity() {
+        BaiHatEntity entity = new BaiHatEntity();
+        entity.setSoluotNghe(bh.getSoluotNghe() + 1);
+        entity.setMaBh(bh.getMaBh());
+        return entity;
+    }
+
     int row = 0;
 
     void edit() {
         this.row = table1.getSelectedRow();
         String maBh = (String) table1.getValueAt(this.row, 4);
+        bh = bhDao.selectById(maBh);
 
-        BaiHatEntity bh = bhDao.selectById(maBh);
+        try {
+            BaiHatEntity bhEntity = getEntity();
+            bhDao.updateView(bhEntity);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         BaiHatStateManager.setSelectedBaiHat(bh);
+        MusicDetails.setSelectedBaiHat(bh);
+
         EventQueue.invokeLater(() -> {
             EventManager.fireEvent(BAI_HAT_SELECTED_EVENT, bh);
+            EventManager.fireEvent(DETAILS_SELECTED_EVENT, bh);
         });
     }
 

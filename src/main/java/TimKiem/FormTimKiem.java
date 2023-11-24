@@ -1,21 +1,29 @@
 package TimKiem;
 
 import component2.ListChill;
+import dao.BaiHatDAO;
+import entity.BaiHatEntity;
 import java.awt.Color;
+import java.awt.EventQueue;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import model.Model_Hit;
+import utils.EventManager;
 
 public class FormTimKiem extends javax.swing.JPanel {
+
+    BaiHatDAO bhDao = new BaiHatDAO();
+    public static final String BAI_HAT_SEARCHED = "BAI_HAT_SEARCHED";
 
     public FormTimKiem() {
         initComponents();
         init();
     }
-    
-    public void init(){
+
+    public void init() {
         setHoverCursor(jLabel2);
         setHoverCursor(jLabel4);
         setHoverCursor(jLabel5);
@@ -23,17 +31,32 @@ public class FormTimKiem extends javax.swing.JPanel {
         setHoverCursor(jLabel7);
         listHit1.addItem(new Model_Hit(new ImageIcon(getClass().getResource("/icon/Music/catdoinoisau.jpg")), "Cắt Đôi Nỗi Sầu", "Tăng Duy Tân", "11/9/2023"));
     }
-    
-        private static void setHoverCursor(JLabel label) {
+
+    public void search() {
+        String textSearch = txtSearch.getText();
+        BaiHatEntity listBh = bhDao.selectByNameMusic(textSearch);
+        if (listBh == null) {
+
+            EventQueue.invokeLater(() -> {
+                EventManager.fireEvent(BAI_HAT_SEARCHED, listBh);
+            });
+            JOptionPane.showMessageDialog(null, "đã gửi sự kiện");
+
+        } else {
+            JOptionPane.showMessageDialog(null, "Không tìm thấy bài hát:  " + txtSearch.getText());
+        }
+    }
+
+    private static void setHoverCursor(JLabel label) {
         label.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-                label.setBackground(new Color(39, 50,60));
+                label.setBackground(new Color(39, 50, 60));
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
-                  label.setBackground(new Color(32, 42,53));
+                label.setBackground(new Color(32, 42, 53));
             }
         });
     }
@@ -42,7 +65,7 @@ public class FormTimKiem extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        textFieldAnimation1 = new swing.TextFieldAnimation();
+        txtSearch = new swing.TextFieldAnimation();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
@@ -53,6 +76,12 @@ public class FormTimKiem extends javax.swing.JPanel {
         jLabel3 = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(29, 38, 49));
+
+        txtSearch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtSearchActionPerformed(evt);
+            }
+        });
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 22)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
@@ -106,7 +135,7 @@ public class FormTimKiem extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(textFieldAnimation1, javax.swing.GroupLayout.PREFERRED_SIZE, 458, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 458, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addComponent(listHit1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
@@ -131,7 +160,7 @@ public class FormTimKiem extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(textFieldAnimation1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -152,6 +181,10 @@ public class FormTimKiem extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void txtSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSearchActionPerformed
+        search();
+    }//GEN-LAST:event_txtSearchActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
@@ -162,6 +195,6 @@ public class FormTimKiem extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private List.ListHit<String> listHit1;
-    private swing.TextFieldAnimation textFieldAnimation1;
+    private swing.TextFieldAnimation txtSearch;
     // End of variables declaration//GEN-END:variables
 }

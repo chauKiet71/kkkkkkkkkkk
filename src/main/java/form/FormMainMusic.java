@@ -1,7 +1,7 @@
 package form;
 
 import entity.BaiHatEntity;
-import entity.BaiHatStateManager;
+import saveEvent.BaiHatStateManager;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
