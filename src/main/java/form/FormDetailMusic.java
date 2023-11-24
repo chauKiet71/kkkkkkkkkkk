@@ -69,10 +69,6 @@ public class FormDetailMusic extends javax.swing.JPanel {
                 bufferedReader.close();
                 filereder.close();
                 lbInNhac.setText("<html>" + content.toString() + "</html");
-//                lbInNhac.setFont(new Font("Arial", Font.BOLD, 15) {
-//                });
-                //in ảnh lên lable
-//                lbInNhac.setForeground(Color.white);
                 lbTenBH.setText(tenBaiHat);
                 lbCaSi.setText(caSi);
                 lbView.setText("" + view + " lượt nghe");

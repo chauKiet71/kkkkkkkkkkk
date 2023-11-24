@@ -1,17 +1,29 @@
 package NhacCuaToi;
 
+import entity.AccountData;
+import entity.BaiHatEntity;
+import form.FormChiTietPlaylist;
+import form.FormTrangChu;
 import javax.swing.ImageIcon;
+import main.playList;
 import model.Model_TuyenTap;
+import saveEvent.MusicDetails;
+import utils.EventManager;
 
 public class TaoPlaylist extends javax.swing.JPanel {
+
+    MusicDetails manager;
 
     public TaoPlaylist() {
         initComponents();
         init();
+//        list_TuyenTap1.setVisible(false);
     }
 
     public void init() {
-        list_TuyenTap1.addItem(new Model_TuyenTap(new ImageIcon(getClass().getResource("/icon/Chill/tuyentap37.jpg")), "Tiktok Remix Việt", "goodmusic253"));
+        String tenTk = AccountData.getTenTK();
+        String tenPl = AccountData.getTenPlaylist();
+        list_TuyenTap1.addItem(new Model_TuyenTap(new ImageIcon(getClass().getResource("/icon/Chill/tuyentap37.jpg")), tenPl, tenTk));
     }
 
     @SuppressWarnings("unchecked")
@@ -31,6 +43,11 @@ public class TaoPlaylist extends javax.swing.JPanel {
         setBackground(new java.awt.Color(29, 38, 49));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
+        list_TuyenTap1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                list_TuyenTap1MouseClicked(evt);
+            }
+        });
         add(list_TuyenTap1, new org.netbeans.lib.awtextra.AbsoluteConstraints(245, 85, 210, 299));
 
         buttonOutLine1.setBackground(new java.awt.Color(29, 194, 255));
@@ -51,6 +68,14 @@ public class TaoPlaylist extends javax.swing.JPanel {
         jLabel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(102, 102, 102)));
         jLabel1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jLabel1.setOpaque(true);
+        jLabel1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel1MouseClicked(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                jLabel1MouseReleased(evt);
+            }
+        });
         add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(17, 94, 210, 290));
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
@@ -116,6 +141,21 @@ public class TaoPlaylist extends javax.swing.JPanel {
     private void lbListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbListMouseClicked
 
     }//GEN-LAST:event_lbListMouseClicked
+
+    private void jLabel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MouseClicked
+
+    }//GEN-LAST:event_jLabel1MouseClicked
+
+    private void jLabel1MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MouseReleased
+        System.out.println("tao playlist");
+        form.TaoMoiPlaylist playlist = new form.TaoMoiPlaylist();
+        playlist.setVisible(true);
+    }//GEN-LAST:event_jLabel1MouseReleased
+
+    private void list_TuyenTap1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_list_TuyenTap1MouseClicked
+        playList pl = new playList();
+        pl.setVisible(true);
+    }//GEN-LAST:event_list_TuyenTap1MouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
